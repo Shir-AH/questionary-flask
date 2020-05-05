@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html dir="rtl">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap RTL CSS -->
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css"
+        integrity="sha384-vus3nQHTD+5mpDiZ4rkEPlnkcyTP+49BhJ4wJeJunw06ZAp+wzzeBPUXr42fi8If" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <title>שאלון</title>
+</head>
+
+<body>
+    <header class="site-header">
+        <!-- <nav class="navbar navbar-default"></nav> -->
+        <!-- Dummy nav bar -->
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container">
+                <a class="navbar-brand mr-4" href="#">שאלון</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <div class="navbar-nav mr-auto">
+                        #
+                    </div>
+                    <!-- Navbar Right Side -->
+                    <div class="navbar-nav">
+                        #
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <fieldset class="form=group">
+                        <legend class="border-bottom mb-4">{{ legend }}</legend>
+                        <article class="media content-section mt-4 mb-2">
+                            <div class="media-body ml-2">
+                                {% for field in form %}
+                                {% if field != form.csrf_token %}
+                                <h3>{{ field.label(class="form-control-label") }}</h3>
+                                <br>
+                                <div class="form-group">
+                                    {{ field(class="form-control form-control-lg") }}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </article>
+                    </fieldset>
+                    <!-- <div class="form-group"> -->
+                    {#{ form.submit(class="btn btn-outline-info") }#}
+                    <!-- </div> -->
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="content-section">
+                    <h3>קטגוריות</h3>
+                    <p class='text-muted'>ניווט בין קטגוריות
+                        <ul class="list-group" id="categorList">
+                            {% for category in categories %}
+                            <li class="list-group-item list-group-item-light">{{ category.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.rtlcss.com/bootstrap/v4.2.1/js/bootstrap.min.js"
+        integrity="sha384-a9xOd0rz8w0J8zqj1qJic7GPFfyMfoiuDjC9rqXlVOcGO/dmRqzMn34gZYDTel8k"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
