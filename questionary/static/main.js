@@ -1,30 +1,3 @@
-data = [
-    {
-        name: 'קטגוריה ראשונה',
-        questions: [
-            'שאלה',
-            'עוד שאלה',
-            'שאלה שלישית',
-        ],
-    },
-    {
-        name: 'קטגוריה שנייה',
-        questions: [
-            'שאלה',
-            'שאלה שנייה',
-            'שאלה שלישית',
-            'שאלה רביעית',
-        ],
-    },
-    {
-        name: 'קטגוריה שלישית',
-        questions: [
-            'שאלה',
-            'שאלה שנייה',
-        ],
-    },
-]
-
 function newElement(elementType = '', classes = [], innerText = '') {
     let element = document.createElement(elementType);
     for (const c of classes)
@@ -69,7 +42,7 @@ function addQuestion(fieldset, header = '', questionName = '', questionIndex = '
 function buildCategory(fieldset, categoryQuestions, categoryIndex) {
     for (const qIndex in categoryQuestions) {
         addQuestion(fieldset,
-            header = `${categoryQuestions[qIndex]}`,
+            header = `${categoryQuestions[qIndex].question}`,
             questionName = 'רצון',
             questionIndex = qIndex,
             categoryIndex = categoryIndex);
@@ -97,23 +70,24 @@ function addCategory(formElement, category, categoryIndex) {
     formElement.appendChild(section);
 }
 
-function addSubmitButton(formElement) {
-    sumbitButton = newElement('input');
+function addSubmitButton(formElement, data) {
+    let sumbitButton = newElement('input');
     sumbitButton.type = 'submit';
     sumbitButton.id = 'submit';
     sumbitButton.value = 'סיימתי';
     for (const categoryIndex in data)
         sumbitButton.classList.add(`category-${categoryIndex}`);
-    form.appendChild(sumbitButton);
+    formElement.appendChild(sumbitButton);
 }
 
-function buildForm(data) {
-    form = document.getElementById("form");
+function buildForm(json) {
+    let data = json['data'];
+    let form = document.getElementById("form");
     for (const categoryIndex in data) {
         let category = data[categoryIndex];
         addCategory(form, category, categoryIndex);
     }
-    addSubmitButton(form);
+    addSubmitButton(form, data);
 }
 
 function moveToCategory(evt) {
@@ -127,8 +101,9 @@ function moveToCategory(evt) {
             elm.style.display = '';
 }
 
-function buildList(data) {
-    list = document.getElementById('categoryList');
+function buildList(json) {
+    let data = json['data'];
+    let list = document.getElementById('categoryList');
     for (const categoryIndex in data) {
         let categoryName = data[categoryIndex].name;
         let li = newElement('li', ['list-group-item', 'list-group-item-light'], categoryName);
@@ -156,6 +131,20 @@ function get_user_answer() {
     catch { }
 }
 
+function fetch_data() {
+    try {
+        fetch(`${window.origin}/questions`)
+            .then(response => {
+                if (!response.ok)
+                    throw new Error();
+                return response.json();
+            })
+            .then(json => { buildForm(json); buildList(json); })
+            .catch(e => { });
+    }
+    catch { }
+}
+
 function fill_form(json) {
     for (const questionId in json) {
         if (json.hasOwnProperty(questionId)) {
@@ -165,6 +154,5 @@ function fill_form(json) {
     }
 }
 
-buildForm(data);
-buildList(data);
+fetch_data();
 get_user_answer();

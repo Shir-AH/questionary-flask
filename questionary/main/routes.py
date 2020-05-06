@@ -1,5 +1,5 @@
-from flask import render_template, request, Blueprint, redirect, url_for
-from questionary.models import QuestionaryResults
+from flask import render_template, request, Blueprint, redirect, url_for, jsonify
+from questionary.models import QuestionaryResults, Category, Questions
 from questionary import db
 from flask_login import current_user
 import json
@@ -49,3 +49,24 @@ def answer_by_id(id):
     result_object = QuestionaryResults.query.filter_by(id=id).first_or_404()
     result_str = json.loads(result_object.questionary_results)
     return render_template('check.html', results=result_str, result_object=result_object)
+
+
+@main.route('/questions', methods=['GET'])
+def questions():
+    questions_obj = {'data': []}
+
+    categories = Category.query.all()
+    for category in categories:
+        category_questions = Questions.query.filter_by(category=category)
+
+        category_obj = {
+            'name': category.name,
+            'questions': [{
+                'question': q.question,
+                'explanation': q.explanation
+            } for q in category_questions]
+        }
+
+        questions_obj['data'].append(category_obj)
+
+    return jsonify(questions_obj)
