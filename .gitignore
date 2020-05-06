@@ -2,5 +2,8 @@
 /vscode/
 .__pycache__/
 /__pycache__/
+__pycache__/
 .venv/
 /venv/
+.__pycache__
+.pyc

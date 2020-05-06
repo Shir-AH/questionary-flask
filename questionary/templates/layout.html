@@ -20,18 +20,25 @@
         <!-- Dummy nav bar -->
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
             <div class="container">
-                <a class="navbar-brand mr-4" href="#">שאלון</a>
+                <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}">שאלון</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
                     aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
-                        #
+                        <a class="nav-item nav-link" href="{{ url_for('main.home') }}">בית</a>
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
-                        #
+                        {% if current_user.is_authenticated %}
+                        <span class="nav-item nav-link">שלום <b>{{ current_user.username }}</b>!</span>
+                        <a class="nav-item nav-link" href="{{ url_for('users.account') }}">משתמש</a>
+                        <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">התנתקות</a>
+                        {% else %}
+                        <a class="nav-item nav-link" href="{{ url_for('users.login') }}">התחברות</a>
+                        <a class="nav-item nav-link" href="{{ url_for('users.register') }}">הרשמה</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -40,6 +47,15 @@
     <main role="main" class="container">
         <div class="row">
             <div class="col-md-8">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
                 {% block content %}
                 {% endblock content %}
             </div>
