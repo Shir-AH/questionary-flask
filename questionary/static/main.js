@@ -47,6 +47,7 @@ function addRangeInput(destElement, categoryIndex = '', questionIndex = '', subQ
     if (subQuestion)
         name += 's';
     range.name = name;
+    range.id = name;
     destElement.appendChild(range);
     return range;
 }
@@ -141,7 +142,29 @@ function buildList(data) {
     list.appendChild(li);
 }
 
-function fill_form() { }
+function get_user_answer() {
+    try {
+        fetch(`${window.origin}/user/user_answer`)
+            .then(response => {
+                if (!response.ok)
+                    throw new Error();
+                return response.json();
+            })
+            .then(json => fill_form(json))
+            .catch(e => { });
+    }
+    catch { }
+}
+
+function fill_form(json) {
+    for (const questionId in json) {
+        if (json.hasOwnProperty(questionId)) {
+            const questionValue = json[questionId];
+            document.getElementById(questionId).defaultValue = questionValue;
+        }
+    }
+}
 
 buildForm(data);
 buildList(data);
+get_user_answer();

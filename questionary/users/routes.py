@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from questionary import db, bcrypt
 from questionary.models import User, QuestionaryResults
@@ -112,8 +112,9 @@ def user_results(username):
     return redirect(url_for('main.answer_by_id', id=result_id))
 
 
-@users.route('/user/<string:username>/current_answer', methods=['GET', 'POST'])
-def get_user_answer(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    return json.loads(QuestionaryResults.query.filter_by(author=user).order_by(
+@users.route('/user/user_answer', methods=['GET', 'POST'])
+@login_required
+def get_user_answer():
+    answer = json.loads(QuestionaryResults.query.filter_by(author=current_user).order_by(
         QuestionaryResults.date_posted.desc()).first_or_404().questionary_results)
+    return jsonify(answer)
