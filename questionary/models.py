@@ -60,10 +60,10 @@ class QuestionaryResults(db.Model):
 
 class Category(db.Model):
     name = db.Column(db.String(120), primary_key=True, nullable=False)
-    questions = db.relationship('Question', backref='category', lazy=True)
+    questions = db.relationship('Questions', backref='category', lazy=True)
 
 
 class Questions(db.Model):
     question = db.Column(db.Text, primary_key=True, nullable=False)
     explanation = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('category.name'))
+    category_name = db.Column(db.String, db.ForeignKey('category.name'))
