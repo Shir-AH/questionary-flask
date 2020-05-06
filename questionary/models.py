@@ -55,4 +55,4 @@ class QuestionaryResults(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return f"Results('{self.date_posted}')"
+        return f"Results(result #{self.id}: '{self.date_posted}')"

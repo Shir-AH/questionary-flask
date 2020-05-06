@@ -5,6 +5,7 @@ from questionary.models import User, QuestionaryResults
 from questionary.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                      RequestResetForm, ResetPasswordForm)
 from questionary.users.utils import save_picture, send_reset_email
+import json
 
 users = Blueprint('users', __name__)
 
@@ -22,8 +23,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         login_user(user)
-        flash(
-            f'חשבון נוצר בעבור {form.username.data}', 'success')
+        flash(f'חשבון נוצר בעבור {form.username.data}', 'success')
         return redirect(url_for('main.home'))
     return render_template('register.html', title='הרשמה', form=form)
 
@@ -102,3 +102,18 @@ def reset_token(token):
             f'{user.username}, הסיסמה שלך השתנתה! עכשיו אפשר להיכנס!', 'success')
         return redirect(url_for('users.login'))
     return render_template('reset_token.html', form=form)
+
+
+@users.route('/user/<string:username>')
+def user_results(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    result_id = QuestionaryResults.query.filter_by(author=user).order_by(
+        QuestionaryResults.date_posted.desc()).first_or_404().id
+    return redirect(url_for('main.answer_by_id', id=result_id))
+
+
+@users.route('/user/<string:username>/current_answer', methods=['GET', 'POST'])
+def get_user_answer(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return json.loads(QuestionaryResults.query.filter_by(author=user).order_by(
+        QuestionaryResults.date_posted.desc()).first_or_404().questionary_results)

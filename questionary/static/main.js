@@ -141,5 +141,7 @@ function buildList(data) {
     list.appendChild(li);
 }
 
+function fill_form() { }
+
 buildForm(data);
 buildList(data);
