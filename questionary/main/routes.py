@@ -7,7 +7,8 @@ import json
 main = Blueprint('main', __name__)
 
 
-@main.route('/', methods=['GET', 'POST'])
+@main.route('/')
+@main.route('/home')
 def home():
     return render_template('main.html')
 

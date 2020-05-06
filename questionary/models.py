@@ -47,6 +47,10 @@ class User(db.Model, UserMixin):
             return None
         return User.query.get(user_id)
 
+    @property
+    def has_results(self):
+        return 0 < len(QuestionaryResults.query.filter_by(author=self).all())
+
 
 class QuestionaryResults(db.Model):
     id = db.Column(db.Integer, primary_key=True)

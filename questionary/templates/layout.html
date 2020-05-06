@@ -28,7 +28,7 @@
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
                         <a class="nav-item nav-link" href="{{ url_for('main.home') }}">בית</a>
-                        {% if current_user.is_authenticated %}
+                        {% if current_user.is_authenticated and current_user.has_results %}
                         <a class="nav-item nav-link"
                             href="{{ url_for('users.user_results', username=current_user.username) }}">צפו בתשובות
                             שלכם</a>

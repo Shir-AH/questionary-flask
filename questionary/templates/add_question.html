@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>הוספת קטגוריה</h1>
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form=group">
+            <legend class="border-bottom mb-4">קטגוריה חדשה</legend>
+            <div class="form-group">
+                {{ form.category.label(class="form-control-label") }}
+                {% if form.category.errors %}
+                {{ form.category(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.category.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.category(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.question.label(class="form-control-label") }}
+                {% if form.question.errors %}
+                {{ form.question(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.question.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.question(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.explanation.label(class="form-control-label") }}
+                {% if form.explanation.errors %}
+                {{ form.explanation(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.explanation.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.explanation(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>
+{% endblock content %}

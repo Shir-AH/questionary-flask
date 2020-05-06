@@ -28,10 +28,12 @@ def create_app(config_class=Config):
 
     from questionary.users.routes import users
     from questionary.main.routes import main
+    from questionary.admin_tools.routes import admin_tools
     from questionary.errors.handlers import errors
 
     app.register_blueprint(users)
     app.register_blueprint(main)
+    app.register_blueprint(admin_tools)
     app.register_blueprint(errors)
 
     return app
