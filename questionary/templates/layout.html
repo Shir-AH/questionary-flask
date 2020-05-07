@@ -11,6 +11,9 @@
         integrity="sha384-vus3nQHTD+5mpDiZ4rkEPlnkcyTP+49BhJ4wJeJunw06ZAp+wzzeBPUXr42fi8If" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    {% block additional_styles %}
+
+    {% endblock additional_styles %}
     <title>שאלון</title>
 </head>
 
@@ -54,6 +57,12 @@
     </header>
     <main role="main" class="container">
         <div class="row">
+            <div class="col-md-3" id="sidebar">
+                <div class="content-section">
+                    {% block content_section %}
+                    {% endblock content_section %}
+                </div>
+            </div>
             <div class="col-md-8">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -66,12 +75,6 @@
                 {% endwith %}
                 {% block content %}
                 {% endblock content %}
-            </div>
-            <div class="col-md-4">
-                <div class="content-section">
-                    {% block content_section %}
-                    {% endblock content_section %}
-                </div>
             </div>
         </div>
     </main>

@@ -1,0 +1,114 @@
+input[type='range'] {
+    border: solid 0 transparent;
+    border-width: 0 1em;
+    width: 32em;
+    height: 2em;
+    border-radius: .25em;
+    background: transparent;
+    font-size: 1em;
+}
+
+input[type='range'], input[type='range']::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+}
+
+/* Special styling for WebKit/Blink */
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #444444;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    background: #eeeeee;
+    cursor: pointer;
+    margin-top: -0.5em;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+/* All the same stuff for Firefox */
+
+input[type=range]::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    background: #eeeeee;
+    cursor: pointer;
+    margin-top: -0.5em;
+}
+
+/* All the same stuff for IE */
+
+input[type=range]::-ms-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    background: #eeeeee;
+    cursor: pointer;
+    margin-top: -0.5em;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+    position: relative;
+    width: 32em;
+    height: 0.375em;
+    background: linear-gradient(90deg, #ffffff -2em, rgba(0, 0, 0, 0) 0.125em), linear-gradient(90deg, #73e800, #90e600, #90e600, #e6e600, #e69000, #e63900, #e81c00);
+    background-size: 2em 100%, 100% 100%;
+}
+
+input[type='range']:focus {
+    outline: none;
+    box-shadow: 0 0 .25em orange;
+}
+
+#sidebar {
+    visibility: visible;
+}
+
+#form .hidden {
+    display: none;
+}
+
+h2, h3 {
+    margin: 1rem;
+}
+
+h1 {
+    margin-bottom: 1rem;
+}
+
+form {
+    color: #555555;
+}
+
+fieldset {
+    border: solid;
+    border-color: #eeeeee;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.form-fieldset:hover {
+    background-color: #f5f5f5;
+}
+
+label {
+    margin-right: 1rem;
+}
+
+input {
+    margin: 0.5rem;
+}
+
+.slider {
+    opacity: 0.7;
+}
+
+.slider:hover {
+    /* Fully shown on mouse-over */
+    opacity: 1;
+}

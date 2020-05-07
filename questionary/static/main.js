@@ -14,7 +14,7 @@ function addQuestionLabel(destElement, questionName = '', categoryIndex = '', qu
 }
 
 function addRangeInput(destElement, categoryIndex = '', questionIndex = '', subQuestion = false) {
-    let range = newElement('input', [`category-${categoryIndex}`])
+    let range = newElement('input', [`category-${categoryIndex}`, 'form-control-range', 'slider'])
     range.type = 'range';
     let name = `c${categoryIndex}q${questionIndex}`;
     if (subQuestion)
@@ -56,7 +56,7 @@ function buildCategory(fieldset, categoryQuestions, categoryIndex) {
 }
 
 function addCategory(formElement, category, categoryIndex) {
-    let fieldset = newElement('fieldset', [`category-${categoryIndex}`]);
+    let fieldset = newElement('fieldset', [`category-${categoryIndex}`, 'form-fieldset']);
     fieldset.id = `category-${categoryIndex}-fieldset`;
     buildCategory(fieldset, category.questions, categoryIndex);
 
@@ -71,7 +71,7 @@ function addCategory(formElement, category, categoryIndex) {
 }
 
 function addSubmitButton(formElement, data) {
-    let sumbitButton = newElement('input');
+    let sumbitButton = newElement('input', ['btn', 'btn-outline-info']);
     sumbitButton.type = 'submit';
     sumbitButton.id = 'submit';
     sumbitButton.value = 'סיימתי';
@@ -93,12 +93,12 @@ function buildForm(json) {
 function moveToCategory(evt) {
     let categoryClass = evt.currentTarget.id;
     for (const elm of document.getElementById('form').children)
-        elm.style.display = 'none';
+        elm.classList.add('hidden');
     for (const elm of document.getElementsByClassName(categoryClass))
-        elm.style.display = '';
+        elm.classList.remove('hidden');
     if (categoryClass === 'all-categories')
         for (const elm of document.getElementById('form').children)
-            elm.style.display = '';
+            elm.classList.remove('hidden');
 }
 
 function buildList(json) {
@@ -106,12 +106,12 @@ function buildList(json) {
     let list = document.getElementById('categoryList');
     for (const categoryIndex in data) {
         let categoryName = data[categoryIndex].name;
-        let li = newElement('li', ['list-group-item', 'list-group-item-light'], categoryName);
+        let li = newElement('li', ['list-group-item'], categoryName);
         li.id = `category-${categoryIndex}`;
         li.addEventListener('click', moveToCategory);
         list.appendChild(li);
     }
-    let li = newElement('li', ['list-group-item', 'list-group-item-light'], 'הצג הכל');
+    let li = newElement('li', ['list-group-item'], 'הצג הכל');
     li.id = 'all-categories';
     li.addEventListener('click', moveToCategory);
     list.appendChild(li);
