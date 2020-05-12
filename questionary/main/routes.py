@@ -51,6 +51,18 @@ def answer_by_id(id):
     return render_template('check.html', results=result_str, result_object=result_object)
 
 
+@main.route('/answers/<int:id>', methods=['GET', 'POST'])
+def answers(id):
+    return render_template('answers.html', id=id)
+
+
+@main.route('/get_answers/<int:id>', methods=['GET', 'POST'])
+def get_answer(id):
+    answer = json.loads(QuestionaryResults.query.filter_by(
+        id=id).first_or_404().questionary_results)
+    return jsonify(answer)
+
+
 @main.route('/questions', methods=['GET'])
 def questions():
     questions_obj = {'data': []}

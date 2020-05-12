@@ -14,7 +14,7 @@ function addQuestionLabel(destElement, questionName = '', categoryIndex = '', qu
 }
 
 function addRangeInput(destElement, categoryIndex = '', questionIndex = '', subQuestion = false) {
-    let range = newElement('input', [`category-${categoryIndex}`, 'form-control-range', 'slider'])
+    let range = newElement('input', [`category-${categoryIndex}`, 'form-control-range', 'slider', 'questionary-input'])
     range.type = 'range';
     let name = `c${categoryIndex}q${questionIndex}`;
     if (subQuestion)
@@ -71,7 +71,7 @@ function addCategory(formElement, category, categoryIndex) {
 }
 
 function addSubmitButton(formElement, data) {
-    let sumbitButton = newElement('input', ['btn', 'btn-outline-info']);
+    let sumbitButton = newElement('input', ['btn', 'btn-outline-info', 'questionary-input', 'questionary-button']);
     sumbitButton.type = 'submit';
     sumbitButton.id = 'submit';
     sumbitButton.value = 'סיימתי';
@@ -117,7 +117,17 @@ function buildList(json) {
     list.appendChild(li);
 }
 
-function get_user_answer() {
+function presentForm() {
+    let formButton = document.getElementById('submit');
+    formButton.remove();
+    let formInputs = document.getElementsByClassName('questionary-input');
+    for (const field of formInputs)
+        field.disabled = true;
+}
+
+function getUserAnswer(freeze = false) {
+    const parsedUrl = new URL(window.location.href);
+    console.log(parsedUrl.pathname);
     try {
         fetch(`${window.origin}/user/user_answer`)
             .then(response => {
@@ -125,13 +135,14 @@ function get_user_answer() {
                     throw new Error();
                 return response.json();
             })
-            .then(json => fill_form(json))
+            .then(json => fillForm(json))
+            .then(() => { if (freeze) presentForm(); })
             .catch(e => { });
     }
     catch { }
 }
 
-function fetch_data() {
+function fetchQuestions(freeze = false) {
     try {
         fetch(`${window.origin}/questions`)
             .then(response => {
@@ -140,12 +151,13 @@ function fetch_data() {
                 return response.json();
             })
             .then(json => { buildForm(json); buildList(json); })
+            .then(() => getUserAnswer(freeze))
             .catch(e => { });
     }
     catch { }
 }
 
-function fill_form(json) {
+function fillForm(json) {
     for (const questionId in json) {
         if (json.hasOwnProperty(questionId)) {
             const questionValue = json[questionId];
@@ -153,6 +165,3 @@ function fill_form(json) {
         }
     }
 }
-
-fetch_data();
-get_user_answer();

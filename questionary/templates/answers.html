@@ -4,7 +4,7 @@
 {% endblock additional_styles %}
 {% block content %}
 <h1>שאלון נחמד</h1>
-<form id="form" method="POST" action="{{ url_for('main.check') }}"></form>
+<form id="form" method="" action=""></form>
 {% endblock content %}
 {% block content_section %}
 <h3>ניווט</h3>
@@ -14,6 +14,6 @@
 {% block scripts %}
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 <script>
-    fetchQuestions();
+    fetchQuestions(freeze = true);
 </script>
 {% endblock scripts %}
