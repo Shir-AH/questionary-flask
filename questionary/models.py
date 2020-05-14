@@ -30,6 +30,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     results = db.relationship('QuestionaryResults',
                               backref='author', lazy=True)
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    confirmed_on = db.Column(db.DateTime)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
