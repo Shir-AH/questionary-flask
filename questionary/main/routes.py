@@ -33,10 +33,12 @@ def check():
         if current_user.is_authenticated:
             results = QuestionaryResults(
                 questionary_results=results_str, author=current_user)
-        results = QuestionaryResults(questionary_results=results_str)
+        else:
+            results = QuestionaryResults(
+                questionary_results=results_str)
         db.session.add(results)
         db.session.commit()
-        return redirect(url_for('main.answer_by_id', id=results.id))
+        return redirect(url_for('main.answers', id=results.id))
     else:
         if current_user.is_authenticated:
             return redirect(url_for('user.user_results', username=current_user.username))
@@ -44,16 +46,9 @@ def check():
             return redirect(url_for('main.home'))
 
 
-@main.route('/answer/<int:id>')
-def answer_by_id(id):
-    result_object = QuestionaryResults.query.filter_by(id=id).first_or_404()
-    result_str = json.loads(result_object.questionary_results)
-    return render_template('check.html', results=result_str, result_object=result_object)
-
-
 @main.route('/answers/<int:id>', methods=['GET', 'POST'])
 def answers(id):
-    return render_template('answers.html', id=id)
+    return render_template('answers.html', answer_id=id)
 
 
 @main.route('/get_answers/<int:id>', methods=['GET', 'POST'])

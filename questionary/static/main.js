@@ -125,24 +125,35 @@ function presentForm() {
         field.disabled = true;
 }
 
-function getUserAnswer(freeze = false) {
-    const parsedUrl = new URL(window.location.href);
-    console.log(parsedUrl.pathname);
-    try {
-        fetch(`${window.origin}/user/user_answer`)
+async function getAnswers(freeze = false, answerId = null) {
+    let currentAnswerId = answerId;
+    if (answerId === null) {
+        currentAnswerId = await fetch(`${window.origin}/user/user_answer_id`)
             .then(response => {
                 if (!response.ok)
                     throw new Error();
                 return response.json();
             })
-            .then(json => fillForm(json))
-            .then(() => { if (freeze) presentForm(); })
-            .catch(e => { });
+            .then(json => json)
+            .catch(() => -1);
     }
-    catch { }
+    if (currentAnswerId !== -1) {
+        try {
+            fetch(`${window.origin}/get_answers/${currentAnswerId}`)
+                .then(response => {
+                    if (!response.ok)
+                        throw new Error();
+                    return response.json();
+                })
+                .then(json => fillForm(json))
+                .then(() => { if (freeze) presentForm(); })
+                .catch(e => { if (freeze) presentForm(); });
+        }
+        catch { }
+    }
 }
 
-function fetchQuestions(freeze = false) {
+function fetchQuestions(freeze = false, answerId = null) {
     try {
         fetch(`${window.origin}/questions`)
             .then(response => {
@@ -151,7 +162,7 @@ function fetchQuestions(freeze = false) {
                 return response.json();
             })
             .then(json => { buildForm(json); buildList(json); })
-            .then(() => getUserAnswer(freeze))
+            .then(() => getAnswers(freeze, answerId))
             .catch(e => { });
     }
     catch { }

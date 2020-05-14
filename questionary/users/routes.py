@@ -109,12 +109,14 @@ def user_results(username):
     user = User.query.filter_by(username=username).first_or_404()
     result_id = QuestionaryResults.query.filter_by(author=user).order_by(
         QuestionaryResults.date_posted.desc()).first_or_404().id
-    return redirect(url_for('main.answer_by_id', id=result_id))
+    return redirect(url_for('main.answers', id=result_id))
 
 
-@users.route('/user/user_answer', methods=['GET', 'POST'])
-@login_required
-def get_user_answer():
-    answer = json.loads(QuestionaryResults.query.filter_by(author=current_user).order_by(
-        QuestionaryResults.date_posted.desc()).first_or_404().questionary_results)
-    return jsonify(answer)
+@users.route('/user/user_answer_id', methods=['GET', 'POST'])
+def get_current_user_answer_id():
+    if current_user.is_authenticated:
+        answer_id = QuestionaryResults.query.filter_by(author=current_user).order_by(
+            QuestionaryResults.date_posted.desc()).first_or_404().id
+    else:
+        answer_id = -1
+    return jsonify(answer_id)

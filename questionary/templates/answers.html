@@ -3,7 +3,11 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
 {% endblock additional_styles %}
 {% block content %}
-<h1>שאלון נחמד</h1>
+{% if current_user.is_authenticated %}
+<h1>התשובות של {{ current_user.username }}</h1>
+{% else %}
+<h1>התשובות שלך</h1>
+{% endif %}
 <form id="form" method="" action=""></form>
 {% endblock content %}
 {% block content_section %}
@@ -14,6 +18,6 @@
 {% block scripts %}
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 <script>
-    fetchQuestions(freeze = true);
+    fetchQuestions(freeze = true, answerId = {{ answer_id }});
 </script>
 {% endblock scripts %}
