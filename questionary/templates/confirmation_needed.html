@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>בבקשה אשרו את החשבון שלכם לפני שאתם ממשיכים</h1>
+<div class="content-section">
+    <p>אנחנו מאוד רוצים להמשיך איתכם, אבל חשוב לנו לוודא שאתם אמיתיים, תוכלו לאשר את החשבון שלכם בבקשה?</p>
+    <br>
+    <p>אם לא קיבלתם מייל אישור חשבון, בבקשה היכנסו לקישור הבא:</p>
+    <a href="{{ url_for('users.request_confirm_account') }}">בקשת מייל אישור חשבון</a>
+</div>
+{% endblock content %}

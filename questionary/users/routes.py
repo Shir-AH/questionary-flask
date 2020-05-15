@@ -3,9 +3,11 @@ from flask_login import login_user, current_user, logout_user, login_required
 from questionary import db, bcrypt
 from questionary.models import User, QuestionaryResults
 from questionary.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
-                                     RequestResetForm, ResetPasswordForm)
-from questionary.users.utils import save_picture, send_reset_email
+                                     RequestResetForm, ResetPasswordForm, RequestConfirmForm)
+from questionary.users.utils import save_picture, send_reset_email, send_confirm_email, restricted
 import json
+from datetime import datetime as dt
+
 
 users = Blueprint('users', __name__)
 
@@ -19,11 +21,12 @@ def register():
         hashed_pw = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
         user = User(username=form.username.data,
-                    email=form.email.data, password=hashed_pw)
+                    email=form.email.data, password=hashed_pw, confirmed=False)
         db.session.add(user)
         db.session.commit()
         login_user(user)
-        flash(f'חשבון נוצר בעבור {form.username.data}', 'success')
+        flash(
+            f'חשבון נוצר בעבור {form.username.data}.\nאנא אשרו את המשתמש באמצעות המייל שקיבלתם', 'success')
         return redirect(url_for('main.home'))
     return render_template('register.html', title='הרשמה', form=form)
 
@@ -52,6 +55,7 @@ def logout():
 
 @users.route('/account', methods=['GET', 'POST'])
 @login_required
+@restricted(access_level='confirmed')
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
@@ -84,11 +88,26 @@ def reset_request():
     return render_template('reset_request.html', form=form)
 
 
+@users.route('/confirm_account', methods=['GET', 'POST'])
+@login_required
+def request_confirm_account():
+    if current_user.is_confirmed:
+        flash('החשבון הזה כבר מאושר :)', 'info')
+        return redirect(url_for('main.home'))
+    form = RequestConfirmForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=current_user.email).first()
+        send_confirm_email(user)
+        flash('בדקו את המייל שלכם!', 'info')
+        return redirect(url_for('main.home'))
+    return render_template('confirm_request.html', form=form)
+
+
 @users.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
-    user = User.verify_reset_token(token=token)
+    user = User.verify_token(token=token)
     if user is None:
         flash('הקוד לא נכון\לא תקף. בבקשה נסו שוב.', 'warning')
         return redirect(url_for('users.reset_request'))
@@ -102,6 +121,26 @@ def reset_token(token):
             f'{user.username}, הסיסמה שלך השתנתה! עכשיו אפשר להיכנס!', 'success')
         return redirect(url_for('users.login'))
     return render_template('reset_token.html', form=form)
+
+
+@users.route('/confirm_account/<token>', methods=['GET', 'POST'])
+def confirm_token(token):
+    if current_user.is_authenticated and current_user.is_confirmed:
+        return redirect(url_for('main.home'))
+    user = User.verify_token(token=token)
+    if user is None:
+        flash('הקוד לא נכון\לא תקף. בבקשה נסו שוב.', 'warning')
+        return redirect(url_for('users.request_confirm_account'))
+    user.confirmed = True
+    user.confirmed_on = dt.now()
+    db.session.commit()
+    flash('החשבון שלך מאושר!', 'success')
+    return redirect(url_for('main.home'))
+
+
+@users.route('/please_confirm')
+def confirmation_needed():
+    return render_template('confirmation_needed.html')
 
 
 @users.route('/user/<string:username>')

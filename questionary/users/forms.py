@@ -64,6 +64,10 @@ class RequestResetForm(FlaskForm):
             raise ValidationError('אין חשבון המשויך לכתובת המייל הזו!')
 
 
+class RequestConfirmForm(FlaskForm):
+    submit = SubmitField('שלחו מייל לאישור חשבון')
+
+
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('סיסמה', validators=[DataRequired()])
     confirm_password = PasswordField('אישור סיסמה', validators=[

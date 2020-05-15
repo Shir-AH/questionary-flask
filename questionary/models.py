@@ -40,8 +40,12 @@ class User(db.Model, UserMixin):
         s = Serializer(current_app.config['SECRET_KEY'], expires_seconds)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
+    def get_confirmation_token(self, expires_seconds=1800):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_seconds)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
     @staticmethod
-    def verify_reset_token(token):
+    def verify_token(token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']
@@ -52,6 +56,10 @@ class User(db.Model, UserMixin):
     @property
     def has_results(self):
         return 0 < len(QuestionaryResults.query.filter_by(author=self).all())
+
+    @property
+    def is_confirmed(self):
+        return self.confirmed
 
 
 class QuestionaryResults(db.Model):

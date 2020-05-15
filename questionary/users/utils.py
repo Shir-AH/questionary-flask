@@ -1,9 +1,11 @@
 import os
 import secrets
 from PIL import Image
-from flask import url_for, current_app
+from flask import url_for, current_app, redirect
 from flask_mail import Message
 from questionary import mail
+from functools import wraps
+from flask_login import current_user
 
 
 def save_picture(form_picture):
@@ -30,3 +32,26 @@ def send_reset_email(user):
 {url_for('users.reset_token', token=token, _external=True)}
 אם לא ביקשתם לאפס סיסמה, אתם יכולים להתעלם מהמייל.\n'''
     mail.send(msg)
+
+
+def send_confirm_email(user):
+    token = user.get_reset_token()
+    msg = Message('מייל אישור משתמש',
+                  sender='matan.arielhavron1@gmail.com', recipients=[user.email])
+    msg.body =\
+        f'''כדי לאשר את המשתמש שלכם בבקשה היכנסו לקישור הבא: 
+{url_for('users.confirm_token', token=token, _external=True)}
+אם לא ביקשתם ליצור משתמש, אתם יכולים להתעלם מהמייל.\n'''
+    mail.send(msg)
+
+
+def restricted(access_level):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if access_level == 'confirmed':
+                if not current_user.is_confirmed:
+                    return redirect(url_for('users.confirmation_needed'))
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
