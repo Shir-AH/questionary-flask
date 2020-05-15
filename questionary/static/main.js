@@ -101,8 +101,8 @@ function moveToCategory(evt) {
             elm.classList.remove('hidden');
 }
 
-function buildList(json) {
-    let data = json['data'];
+function buildList(questionsJson) {
+    let data = questionsJson['data'];
     let list = document.getElementById('categoryList');
     for (const categoryIndex in data) {
         let categoryName = data[categoryIndex].name;
@@ -138,34 +138,28 @@ async function getAnswers(freeze = false, answerId = null) {
             .catch(() => -1);
     }
     if (currentAnswerId !== -1) {
-        try {
-            fetch(`${window.origin}/get_answers/${currentAnswerId}`)
-                .then(response => {
-                    if (!response.ok)
-                        throw new Error();
-                    return response.json();
-                })
-                .then(json => fillForm(json))
-                .then(() => { if (freeze) presentForm(); })
-                .catch(e => { if (freeze) presentForm(); });
-        }
-        catch { }
-    }
-}
-
-function fetchQuestions(freeze = false, answerId = null) {
-    try {
-        fetch(`${window.origin}/questions`)
+        fetch(`${window.origin}/get_answers/${currentAnswerId}`)
             .then(response => {
                 if (!response.ok)
                     throw new Error();
                 return response.json();
             })
-            .then(json => { buildForm(json); buildList(json); })
-            .then(() => getAnswers(freeze, answerId))
-            .catch(e => { });
+            .then(json => fillForm(json))
+            .catch(e => console.log(e))
+            .finally(() => { if (freeze) presentForm(); });
     }
-    catch { }
+}
+
+function fetchQuestions(freeze = false, answerId = null) {
+    fetch(`${window.origin}/questions`)
+        .then(response => {
+            if (!response.ok)
+                throw new Error();
+            return response.json();
+        })
+        .then(json => { buildForm(json); buildList(json); })
+        .then(() => getAnswers(freeze, answerId))
+        .catch(e => { });
 }
 
 function fillForm(json) {

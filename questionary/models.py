@@ -65,13 +65,16 @@ class QuestionaryResults(db.Model):
 
 
 class Category(db.Model):
-    name = db.Column(db.String(120), primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), unique=True, nullable=False)
+    explanation = db.Column(db.Text)
     questions = db.relationship('Questions', backref='category', lazy=True)
 
 
 class Questions(db.Model):
-    question = db.Column(db.Text, primary_key=True, nullable=False)
-    explanation = db.Column(db.Text, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.Text, nullable=False)
+    explanation = db.Column(db.Text)
     category_name = db.Column(db.String, db.ForeignKey('category.name'))
 
 
