@@ -1,4 +1,5 @@
-from questionary import db, login_manager
+from questionary import db, login_manager, admin
+from flask_admin.contrib.sqla import ModelView
 from datetime import datetime as dt
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -10,15 +11,6 @@ from sqlalchemy.dialects import postgresql
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-def add_column(app, table_name, column):
-    engine = create_engine(
-        app.config['SQLALCHEMY_DATABASE_URI'], convert_unicode=True)
-    column_name = column.compile(dialect=engine.dialect)
-    column_type = column.type.compile(engine.dialect)
-    engine.execute(
-        f'ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}')
 
 
 class User(db.Model, UserMixin):
@@ -81,3 +73,7 @@ class Questions(db.Model):
     question = db.Column(db.Text, primary_key=True, nullable=False)
     explanation = db.Column(db.Text, nullable=False)
     category_name = db.Column(db.String, db.ForeignKey('category.name'))
+
+
+admin.add_view(ModelView(Category, db.session))
+admin.add_view(ModelView(Questions, db.session))

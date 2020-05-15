@@ -5,6 +5,7 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from questionary.config import Config
 from flask_migrate import Migrate
+from flask_admin import Admin
 
 
 db = SQLAlchemy()
@@ -14,6 +15,7 @@ login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
 mail = Mail()
 migrate = Migrate()
+admin = Admin()
 
 
 def create_app(config_class=Config):
@@ -25,6 +27,7 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)
+    admin.init_app(app)
 
     from questionary.users.routes import users
     from questionary.main.routes import main
