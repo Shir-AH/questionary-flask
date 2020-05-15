@@ -1,5 +1,4 @@
-from questionary import db, login_manager, admin
-from flask_admin.contrib.sqla import ModelView
+from questionary import db, login_manager, admin, AppModelView
 from datetime import datetime as dt
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -78,5 +77,7 @@ class Questions(db.Model):
     category_name = db.Column(db.String, db.ForeignKey('category.name'))
 
 
-admin.add_view(ModelView(Category, db.session))
-admin.add_view(ModelView(Questions, db.session))
+admin.add_view(AppModelView(User, db.session))
+admin.add_view(AppModelView(QuestionaryResults, db.session))
+admin.add_view(AppModelView(Category, db.session))
+admin.add_view(AppModelView(Questions, db.session))
