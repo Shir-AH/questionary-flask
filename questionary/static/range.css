@@ -112,3 +112,11 @@ input {
     /* Fully shown on mouse-over */
     opacity: 1;
 }
+
+li {
+    font-weight: normal;
+}
+
+.chosen {
+    font-weight: bold;
+}

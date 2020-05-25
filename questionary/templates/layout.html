@@ -5,7 +5,17 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    {% set page_url = url_for('main.home') %}
+    {% if request %}
+    {% set page_url = request.url %}
+    {% endif %}
+    <meta property="og:url" content="{{ page_url }}" />
+    <meta property="og:type" content="website" />
+    <!-- <meta property="og:image" content="https://www.your-domain.com/path/image.jpg" /> -->
+    <meta property="og:title" content="קינקיברי - קינק בעברית" />
+    {% block facebook_meta %}
+    <meta property="og:description" content="אתר הקינק והBDSM העברי" />
+    {% endblock facebook_meta %}
     <!-- Bootstrap RTL CSS -->
     <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css"
         integrity="sha384-vus3nQHTD+5mpDiZ4rkEPlnkcyTP+49BhJ4wJeJunw06ZAp+wzzeBPUXr42fi8If" crossorigin="anonymous">
@@ -18,6 +28,11 @@
 </head>
 
 <body>
+    <!-- facebook sdk -->
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/he_IL/sdk.js#xfbml=1&version=v7.0"></script>
+    <!-- facebook sdk end -->
     <header class="site-header">
         <!-- <nav class="navbar navbar-default"></nav> -->
         <!-- Dummy nav bar -->

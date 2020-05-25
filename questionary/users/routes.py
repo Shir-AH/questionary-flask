@@ -4,10 +4,10 @@ from questionary import db, bcrypt
 from questionary.models import User, QuestionaryResults
 from questionary.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                      RequestResetForm, ResetPasswordForm, RequestConfirmForm)
-from questionary.users.utils import save_picture, send_reset_email, send_confirm_email, restricted
+from questionary.users.utils import (
+    save_picture, send_reset_email, send_confirm_email, restricted)
 import json
 from datetime import datetime as dt
-
 
 users = Blueprint('users', __name__)
 

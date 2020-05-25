@@ -52,14 +52,16 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     admin.init_app(app, index_view=AppIndexView())
 
-    from questionary.users.routes import users
     from questionary.main.routes import main
-    # from questionary._admin_tools.routes import admin_tools
+    from questionary.users.routes import users
     from questionary.errors.handlers import errors
+    # from questionary.google.routes import google
+    # from questionary._admin_tools.routes import admin_tools
 
-    app.register_blueprint(users)
     app.register_blueprint(main)
-    # app.register_blueprint(admin_tools)
+    app.register_blueprint(users)
     app.register_blueprint(errors)
+    # app.register_blueprint(google)
+    # app.register_blueprint(admin_tools)
 
     return app

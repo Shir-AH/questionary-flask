@@ -1,8 +1,10 @@
-from flask import render_template, request, Blueprint, redirect, url_for, jsonify
+from flask import (render_template, request, Blueprint,
+                   redirect, url_for, jsonify, make_response)
 from questionary.models import QuestionaryResults, Category, Questions
 from questionary import db
-from flask_login import current_user
+from flask_login import current_user, login_required
 import json
+# import pdfkit
 
 main = Blueprint('main', __name__)
 
@@ -49,6 +51,27 @@ def check():
 @main.route('/answers/<int:id>', methods=['GET', 'POST'])
 def answers(id):
     return render_template('answers.html', answer_id=id)
+
+
+# @main.route('/answers/<int:id>/pdf', methods=['GET', 'POST'])
+# @login_required
+# def answers_pdf(id):
+#     rendered = render_template('answers.html', answer_id=id)
+#     pdf = pdfkit.from_string(
+#         rendered,
+#         False,
+#         css=[
+#             'pdf.css'
+#             # url_for('static', filename='main.css', _external=True),
+#             # url_for('static', filename='range.css', _external=True)
+#         ]
+#     )
+
+#     response = make_response(pdf)
+#     response.headers['Content-Type'] = 'application/pdf'
+#     response.headers['Content-Disposition'] = 'attachment; filename=out.pdf'
+
+#     return response
 
 
 @main.route('/get_answers/<int:id>', methods=['GET', 'POST'])

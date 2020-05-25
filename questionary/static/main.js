@@ -90,15 +90,16 @@ function buildForm(json) {
     addSubmitButton(form, data);
 }
 
-function moveToCategory(evt) {
+function toggleCategory(evt) {
     let categoryClass = evt.currentTarget.id;
-    for (const elm of document.getElementById('form').children)
-        elm.classList.add('hidden');
+    evt.currentTarget.classList.toggle('chosen');
     for (const elm of document.getElementsByClassName(categoryClass))
+        elm.classList.toggle('hidden');
+}
+
+function showAllCategories(evt) {
+    for (const elm of document.getElementById('form').children)
         elm.classList.remove('hidden');
-    if (categoryClass === 'all-categories')
-        for (const elm of document.getElementById('form').children)
-            elm.classList.remove('hidden');
 }
 
 function buildList(questionsJson) {
@@ -106,14 +107,14 @@ function buildList(questionsJson) {
     let list = document.getElementById('categoryList');
     for (const categoryIndex in data) {
         let categoryName = data[categoryIndex].name;
-        let li = newElement('li', ['list-group-item'], categoryName);
+        let li = newElement('li', ['list-group-item', 'chosen'], categoryName);
         li.id = `category-${categoryIndex}`;
-        li.addEventListener('click', moveToCategory);
+        li.addEventListener('click', toggleCategory);
         list.appendChild(li);
     }
     let li = newElement('li', ['list-group-item'], 'הצג הכל');
     li.id = 'all-categories';
-    li.addEventListener('click', moveToCategory);
+    li.addEventListener('click', showAllCategories);
     list.appendChild(li);
 }
 
