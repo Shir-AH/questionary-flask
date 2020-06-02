@@ -120,3 +120,7 @@ li {
 .chosen {
     font-weight: bold;
 }
+
+#copyme {
+    display: none;
+}

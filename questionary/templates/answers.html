@@ -16,7 +16,26 @@
 {% endif %}
 <form id="form" method="" action=""></form>
 {% include 'facebook_share.jinja.html' %}
-<button type="button"><a href="{{ url_for('main.answers_pdf', id=answer_id) }}">הורדה כ-pdf</a></button>
+<!-- <button type="button"><a href="{#{ url_for('main.answers_pdf', id=answer_id) }#}">הורדה כ-pdf</a></button> -->
+<script>
+    function buttonPressed() {
+        btn = document.getElementById('copyButton');
+        btn.innerText = 'הועתק! אפשר לשתף!';
+        copyToClipboard();
+    }
+    function copyToClipboard() {
+        this.wasCopied = true;
+        const content = document.createElement('textarea');
+        content.value = `עניתי על השאלון של קינקיברי!\n{{ page_url }}`;
+        content.value = content.value.replace('null\n\n', '');
+        document.body.appendChild(content);
+        content.select();
+        content.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        document.body.removeChild(content);
+    }
+</script>
+<button class="btn btn-secondary btn-sm" id="copyButton" onClick="buttonPressed()">העתיקו ושתפו!</button>
 {% endblock content %}
 
 {% block content_section %}
