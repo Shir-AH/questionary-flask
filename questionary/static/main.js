@@ -7,14 +7,15 @@ function newElement(elementType = '', classes = [], innerText = '') {
 }
 
 function addQuestionLabel(destElement, questionName = '', categoryIndex = '', questionIndex = '') {
-    let label = newElement('label', [`category-${categoryIndex}`], questionName);
+    let label = newElement('label', [`category-${categoryIndex}`, 'new'], questionName);
     label.for = `c${categoryIndex}q${questionIndex}`;
     destElement.appendChild(label);
     return label;
 }
 
 function addRangeInput(destElement, categoryIndex = '', questionIndex = '', subQuestion = false) {
-    let range = newElement('input', [`category-${categoryIndex}`, 'form-control-range', 'slider', 'questionary-input'])
+    // add a range input for a specific question.
+    let range = newElement('input', [`category-${categoryIndex}`, 'form-control-range', 'slider', 'questionary-input', 'new'])
     range.type = 'range';
     let name = `c${categoryIndex}q${questionIndex}`;
     if (subQuestion)
@@ -26,12 +27,14 @@ function addRangeInput(destElement, categoryIndex = '', questionIndex = '', subQ
 }
 
 function addQuestionHeader(destElement, headerText = '', categoryIndex = '') {
-    let header = newElement('h3', [`category-${categoryIndex}`], headerText);
+    // receive a question element and add a header to it.
+    let header = newElement('h3', [`category-${categoryIndex}`, 'new'], headerText);
     destElement.appendChild(header);
     return header;
 }
 
 function addQuestion(fieldset, header = '', questionName = '', questionIndex = '', categoryIndex = '') {
+    // add a question to the fieldset recevied.
     let subQuestion = !(header);
     if (!subQuestion)
         addQuestionHeader(fieldset, header, categoryIndex);
@@ -56,13 +59,14 @@ function buildCategory(fieldset, categoryQuestions, categoryIndex) {
 }
 
 function addCategory(formElement, category, categoryIndex) {
-    let fieldset = newElement('fieldset', [`category-${categoryIndex}`, 'form-fieldset']);
+    // add all of the form category elements (section, header, fieldset).
+    let fieldset = newElement('fieldset', [`category-${categoryIndex}`, 'form-fieldset', 'new']);
     fieldset.id = `category-${categoryIndex}-fieldset`;
     buildCategory(fieldset, category.questions, categoryIndex);
 
-    let sectionHeader = newElement('h2', [`category-${categoryIndex}`], category.name);
+    let sectionHeader = newElement('h2', [`category-${categoryIndex}`, 'new'], category.name);
 
-    let section = newElement('section', [`category-${categoryIndex}`]);
+    let section = newElement('section', [`category-${categoryIndex}`, 'new']);
     section.id = `category-${categoryIndex}-section`;
     section.appendChild(sectionHeader);
     section.appendChild(fieldset);
@@ -70,36 +74,49 @@ function addCategory(formElement, category, categoryIndex) {
     formElement.appendChild(section);
 }
 
-function addSubmitButton(formElement, data) {
+function addSubmitButton(formElement) {
     let sumbitButton = newElement('input', ['btn', 'btn-outline-info', 'questionary-input', 'questionary-button']);
     sumbitButton.type = 'submit';
     sumbitButton.id = 'submit';
     sumbitButton.value = 'סיימתי';
-    for (const categoryIndex in data)
-        sumbitButton.classList.add(`category-${categoryIndex}`);
     formElement.appendChild(sumbitButton);
 }
 
 function buildForm(json) {
+    // build the form inputs using the questions data receive 
     let data = json['data'];
     let form = document.getElementById("form");
     for (const categoryIndex in data) {
         let category = data[categoryIndex];
         addCategory(form, category, categoryIndex);
     }
-    addSubmitButton(form, data);
+    addSubmitButton(form);
+}
+
+function toggleSelectAll() {
+    // bold select all when all categories are selected
+    let liElements = document.getElementsByClassName('list-group-item');
+    for (const elm of liElements)
+        if (!elm.classList.contains('chosen'))
+            document.getElementById('all-categories').classList.remove('chosen');
 }
 
 function toggleCategory(evt) {
+    // hide category when it's list item is pressed.
     let categoryClass = evt.currentTarget.id;
     evt.currentTarget.classList.toggle('chosen');
     for (const elm of document.getElementsByClassName(categoryClass))
         elm.classList.toggle('hidden');
+    toggleSelectAll();
 }
 
 function showAllCategories(evt) {
-    for (const elm of document.getElementById('form').children)
-        elm.classList.remove('hidden');
+    // un-hide all categories
+    let elements = document.getElementsByClassName('hidden');
+    while (elements.length > 0)
+        elements[0].classList.remove('hidden');
+    for (const elm of document.getElementsByClassName('list-group-item'))
+        elm.classList.add('chosen');
 }
 
 function buildList(questionsJson) {
@@ -112,18 +129,24 @@ function buildList(questionsJson) {
         li.addEventListener('click', toggleCategory);
         list.appendChild(li);
     }
-    let li = newElement('li', ['list-group-item'], 'הצג הכל');
+    let li = newElement('li', ['list-group-item', 'chosen'], 'הצג הכל');
     li.id = 'all-categories';
     li.addEventListener('click', showAllCategories);
     list.appendChild(li);
 }
 
 function presentForm() {
+    // freeze and disable all of the form elements, remove uneccassary elements.
     let formButton = document.getElementById('submit');
     formButton.remove();
     let formInputs = document.getElementsByClassName('questionary-input');
     for (const field of formInputs)
         field.disabled = true;
+    // remove results that are not user-answered.
+    // this both hides unanswered questions, and protects old users from future questions change.
+    let newResults = document.getElementsByClassName('new');
+    while (newResults.length > 0)
+        newResults[0].parentNode.removeChild(newResults[0]);
 }
 
 async function getAnswers(freeze = false, answerId = null) {
@@ -168,6 +191,18 @@ function fillForm(json) {
         if (json.hasOwnProperty(questionId)) {
             const questionValue = json[questionId];
             document.getElementById(questionId).defaultValue = questionValue;
+            let currentCategory = `category-${questionId.slice(1, 2)}`;
+            let categoryElements = document.getElementsByClassName(currentCategory);
+            for (const elm of categoryElements)
+                elm.classList.remove('new');
         }
     }
+}
+
+function selectCategories() {
+    // used when submitting the form. removing all of the hidden categories from the form, so they wont be saved.
+    let hiddenElements = document.getElementsByClassName('hidden');
+    while (hiddenElements.length > 0)
+        hiddenElements[0].parentNode.removeChild(hiddenElements[0]);
+    return true;
 }

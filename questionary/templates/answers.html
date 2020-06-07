@@ -19,12 +19,13 @@
 <!-- <button type="button"><a href="{#{ url_for('main.answers_pdf', id=answer_id) }#}">הורדה כ-pdf</a></button> -->
 <script>
     function buttonPressed() {
+        // copy the share message to clipborad and change the button text accordingly
+        copyToClipboard();
         btn = document.getElementById('copyButton');
         btn.innerText = 'הועתק! אפשר לשתף!';
-        copyToClipboard();
     }
     function copyToClipboard() {
-        this.wasCopied = true;
+        // create a share message and copy it to the clipboard
         const content = document.createElement('textarea');
         content.value = `עניתי על השאלון של קינקיברי!\n{{ page_url }}`;
         content.value = content.value.replace('null\n\n', '');
