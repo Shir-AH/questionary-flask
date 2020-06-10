@@ -19,13 +19,13 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False,
                            default='default.jpeg')
     password = db.Column(db.String(60), nullable=False)
-    results = db.relationship('QuestionaryResults',
-                              backref='author', lazy=True)
+    answers = db.relationship('Answer', backref='author', lazy=True)
+    categories = db.Column(db.ARRAY(db.Integer()))
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"User '{self.username}', '{self.email}'"
 
     def get_reset_token(self, expires_seconds=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_seconds)
@@ -46,21 +46,16 @@ class User(db.Model, UserMixin):
 
     @property
     def has_results(self):
-        return 0 < len(QuestionaryResults.query.filter_by(author=self).all())
+        return 0 < len(Answer.query.filter_by(author=self).all())
 
     @property
     def is_confirmed(self):
         return self.confirmed
 
-
-class QuestionaryResults(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date_posted = db.Column(db.DateTime, nullable=False, default=dt.utcnow)
-    questionary_results = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return f"Results(result #{self.id}: '{self.date_posted}')"
+    def answer(self, question_id):
+        question = Questions.query.filter_by(id=question_id).first()
+        return Answer.query.filter_by(author=self, question=question) \
+            .order_by(Answer.date_posted.desc()).first()
 
 
 class Category(db.Model):
@@ -75,9 +70,20 @@ class Questions(db.Model):
     question = db.Column(db.Text, nullable=False)
     explanation = db.Column(db.Text)
     category_name = db.Column(db.String, db.ForeignKey('category.name'))
+    answers = db.relationship('Answer', backref='question', lazy=True)
+
+
+class Answer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_posted = db.Column(db.DateTime, nullable=False, default=dt.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey(
+        'questions.id'), nullable=False)
+    exp_answer = db.Column(db.Integer, nullable=False, default=0)
+    wil_answer = db.Column(db.Integer, nullable=False, default=0)
 
 
 admin.add_view(AppModelView(User, db.session))
-admin.add_view(AppModelView(QuestionaryResults, db.session))
 admin.add_view(AppModelView(Category, db.session))
 admin.add_view(AppModelView(Questions, db.session))
+admin.add_view(AppModelView(Answer, db.session))

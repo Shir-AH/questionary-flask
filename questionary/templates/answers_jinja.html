@@ -1,20 +1,18 @@
-{% extends 'layout.html' %}
+{% extends 'questionary_with_jinja.html' %}
 
 {% block facebook_meta %}
+{% if current_user.is_authenticated %}
 <meta property="og:description" content="עניתי על שאלון הקינק של קינקיברי!" />
+{% else %}
+<meta property="og:description" content="שאלון הקינק של קינקיברי" />
+{% endif %}
 {% endblock facebook_meta %}
 
-{% block additional_styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
-{% endblock additional_styles %}
+{% block submit %}
 
-{% block content %}
-{% if current_user.is_authenticated %}
-<h1>התשובות של {{ current_user.username }}</h1>
-{% else %}
-<h1>התשובות שלך</h1>
-{% endif %}
-<form id="form" method="" action=""></form>
+{% endblock submit %}
+
+{% block sharing_options %}
 {% include 'facebook_share.jinja.html' %}
 <!-- <button type="button"><a href="{#{ url_for('main.answers_pdf', id=answer_id) }#}">הורדה כ-pdf</a></button> -->
 <script>
@@ -37,18 +35,9 @@
     }
 </script>
 <button class="btn btn-secondary btn-sm" id="copyButton" onClick="buttonPressed()">העתיקו ושתפו!</button>
-{% endblock content %}
+{% endblock sharing_options %}
 
-{% block content_section %}
+{% block content_section_header %}
 <h3>קטגוריות</h3>
 <p>גלו או הסתירו חלקים מהשאלון</p>
-<ul class="list-group" id="categoryList">
-</ul>
-{% endblock content_section %}
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='main.js') }}"></script>
-<script>
-    fetchQuestions(freeze = true, answerId = {{ answer_id }});
-</script>
-{% endblock scripts %}
+{% endblock content_section_header %}

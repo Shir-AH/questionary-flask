@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from questionary import db, bcrypt
-from questionary.models import User, QuestionaryResults
+from questionary.models import User, Category
 from questionary.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                      RequestResetForm, ResetPasswordForm, RequestConfirmForm)
 from questionary.users.utils import (
@@ -25,8 +25,9 @@ def register():
         db.session.add(user)
         db.session.commit()
         login_user(user)
+        send_confirm_email(user)
         flash(
-            f'חשבון נוצר בעבור {form.username.data}.\nאנא אשרו את המשתמש באמצעות המייל שקיבלתם', 'success')
+            f'חשבון נוצר בעבור {form.username.data}.<br>אנא אשרו את המשתמש באמצעות המייל שקיבלתם לכתובת {form.email.data}.', 'success')
         return redirect(url_for('main.home'))
     return render_template('register.html', title='הרשמה', form=form)
 
@@ -83,7 +84,8 @@ def reset_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
-        flash('בדקו את המייל שלכם!', 'info')
+        flash(
+            f'מייל איפוס סיסמה נשלח ל{form.email.data}. בדקו את המייל שלכם!', 'info')
         return redirect(url_for('users.login'))
     return render_template('reset_request.html', form=form)
 
@@ -98,7 +100,8 @@ def request_confirm_account():
     if form.validate_on_submit():
         user = User.query.filter_by(email=current_user.email).first()
         send_confirm_email(user)
-        flash('בדקו את המייל שלכם!', 'info')
+        flash(
+            f'מייל אישור חשבון נשלח ל{current_user.email}. בדקו את המייל שלכם!', 'info')
         return redirect(url_for('main.home'))
     return render_template('confirm_request.html', form=form)
 
@@ -143,19 +146,8 @@ def confirmation_needed():
     return render_template('confirmation_needed.html')
 
 
-@users.route('/user/<string:username>')
+@users.route('/user/<string:username>/answer')
 def user_results(username):
     user = User.query.filter_by(username=username).first_or_404()
-    result_id = QuestionaryResults.query.filter_by(author=user).order_by(
-        QuestionaryResults.date_posted.desc()).first_or_404().id
-    return redirect(url_for('main.answers', id=result_id))
-
-
-@users.route('/user/user_answer_id', methods=['GET', 'POST'])
-def get_current_user_answer_id():
-    if current_user.is_authenticated:
-        answer_id = QuestionaryResults.query.filter_by(author=current_user).order_by(
-            QuestionaryResults.date_posted.desc()).first_or_404().id
-    else:
-        answer_id = -1
-    return jsonify(answer_id)
+    categories = Category.query.filter(Category.id.in_(user.categories)).all()
+    return render_template('answers_jinja.html', categories=categories, user=user, disabled=True)

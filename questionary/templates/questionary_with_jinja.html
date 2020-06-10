@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block additional_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% endblock additional_styles %}
+
+{% block content %}
+<h1>התשובות של {{ user.username }}</h1>
+<form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}" onsubmit="selectCategories()">
+    {% for category in categories %}
+    <section id="category-{{ category.id }}-section" class="category-{{ category.id }}">
+        <h2 class="category-{{ category.id }}">{{ category.name }}</h2>
+        <fieldset id="category-{{ category.id }}-fieldset" class="form-fieldset category-{{ category.id }}">
+            {% for question in category.questions %}
+            <h3 class="category-{{ category.id }}">{{ question.question }}</h3>
+            <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
+            {% if disabled %}
+            <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                class="category-{{ category.id }} form-control-range slider questionary-input"
+                value="{{ user.answer(question.id).exp_answer }}" disabled>
+            {% else %}
+            <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                class="category-{{ category.id }} form-control-range slider questionary-input"
+                value="{{ user.answer(question.id).exp_answer }}">
+            {% endif %}
+            <br>
+            <label for="{{ question.id }}s" class="category-{{ category.id }}">ניסיון</label>
+            {% if disabled %}
+            <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                class="category-{{ category.id }} form-control-range slider questionary-input"
+                value="{{ user.answer(question.id).wil_answer }}" disabled>
+            {% else %}
+            <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                class="category-{{ category.id }} form-control-range slider questionary-input"
+                value="{{ user.answer(question.id).wil_answer }}">
+            {% endif %}
+            {% endfor %}
+        </fieldset>
+    </section>
+    {% endfor %}
+    {% block submit %}
+    <input class="btn btn-outline-info questionary-input questionary-button" type="submit" name="submit" id="submit"
+        value="סיימתי">
+    {% endblock submit %}
+</form>
+{% block sharing_options %}
+{% endblock sharing_options %}
+{% endblock content %}
+
+{% block content_section %}
+{% block content_section_header %}
+<h3>ניווט</h3>
+{% endblock content_section_header %}
+<ul class="list-group" id="category-list">
+    {% for category in categories %}
+    <li id="category-{{ category.id }}" class="list-group-item category-selector chosen" onclick="toggleCategory()">
+        {{ category.name }}
+    </li>
+    {% endfor %}
+    <li id="all-categories" class="list-group-item chosen" onclick="showAllCategories()">הצג הכל</li>
+</ul>
+{% endblock content_section %}
+
+{% block scripts %}
+<script>
+    for (const elm of document.getElementById('category-list').getElementsByClassName('category-selector'))
+        elm.addEventListener('click', toggleCategory);
+    document.getElementById('all-categories').addEventListener('click', showAllCategories);
+    // simulate a click on the item to hide unselected categories when they are availible
+    let event = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
+    {% if user.categories %}
+    {% for category in categories if not category.id in user.categories %}
+    document.getElementById('category-{{ category.id }}').click();
+    {% endfor %}
+    {% endif %}
+</script>
+{% endblock scripts %}
