@@ -82,9 +82,9 @@ function addSubmitButton(formElement) {
     formElement.appendChild(sumbitButton);
 }
 
-function buildForm(json) {
+function buildForm(questionsJSON) {
     // build the form inputs using the questions data receive 
-    let data = json['data'];
+    let data = questionsJSON['data'];
     let form = document.getElementById("form");
     for (const categoryIndex in data) {
         let category = data[categoryIndex];
@@ -124,7 +124,7 @@ function buildList(questionsJson) {
     let list = document.getElementById('categoryList');
     for (const categoryIndex in data) {
         let categoryName = data[categoryIndex].name;
-        let li = newElement('li', ['list-group-item', 'chosen'], categoryName);
+        let li = newElement('li', ['list-group-item', 'chosen', 'new'], categoryName);
         li.id = `category-${categoryIndex}`;
         li.addEventListener('click', toggleCategory);
         list.appendChild(li);
@@ -150,53 +150,78 @@ function presentForm() {
 }
 
 async function getAnswers(freeze = false, answerId = null) {
+    // get the questionary answers for a specific answer id. 
     let currentAnswerId = answerId;
+    // if no answer id was given, try getting the current user's answer-id:
     if (answerId === null) {
         currentAnswerId = await fetch(`${window.origin}/user/user_answer_id`)
+            // json the answer
             .then(response => {
                 if (!response.ok)
                     throw new Error();
                 return response.json();
             })
             .then(json => json)
+            // if failed = we return 1
             .catch(() => -1);
     }
+    // if we have a valid answer id given or fetched, get the matching questionary-answers
     if (currentAnswerId !== -1) {
         fetch(`${window.origin}/get_answers/${currentAnswerId}`)
+            // json the amswer
             .then(response => {
                 if (!response.ok)
                     throw new Error();
                 return response.json();
             })
-            .then(json => fillForm(json))
+            // give the results retreived and fill the form with the answers
+            .then(questionaryAnswersJSON => fillForm(questionaryAnswersJSON))
             .catch(e => console.log(e))
+            // if needed (like in a view-answers page)
+            // make the inputs disabled and remove the submit option
             .finally(() => { if (freeze) presentForm(); });
     }
 }
 
 function fetchQuestions(freeze = false, answerId = null) {
+    // retreive the questions and categories from the server
     fetch(`${window.origin}/questions`)
         .then(response => {
             if (!response.ok)
                 throw new Error();
             return response.json();
         })
-        .then(json => { buildForm(json); buildList(json); })
+        .then(questionsJSON => { buildForm(questionsJSON); buildList(questionsJSON); })
         .then(() => getAnswers(freeze, answerId))
         .catch(e => { });
 }
 
-function fillForm(json) {
-    for (const questionId in json) {
-        if (json.hasOwnProperty(questionId)) {
-            const questionValue = json[questionId];
+function fillForm(questionaryAnswersJSON) {
+    // take the questionary answers and fill the inputs with'em
+    for (const questionId in questionaryAnswersJSON) {
+        if (questionaryAnswersJSON.hasOwnProperty(questionId)) {
+            // for every question, update the input
+            const questionValue = questionaryAnswersJSON[questionId];
             document.getElementById(questionId).defaultValue = questionValue;
+            // and remove the "new" class from the elements updated
             let currentCategory = `category-${questionId.slice(1, 2)}`;
             let categoryElements = document.getElementsByClassName(currentCategory);
             for (const elm of categoryElements)
                 elm.classList.remove('new');
+            // and from the responding li elements:
+            document.getElementById(currentCategory).classList.remove('new');
         }
     }
+    // new categories are now visible by default.
+    // simulate a click on the item to hide the category withour really deleting it.
+    let event = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true
+    });
+    let newCategories = document.getElementById('categoryList').getElementsByClassName('new');
+    for (const category of newCategories)
+        category.dispatchEvent(event);
 }
 
 function selectCategories() {
