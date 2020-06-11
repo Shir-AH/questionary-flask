@@ -2,6 +2,7 @@
 
 {% block additional_styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css">
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% endblock additional_styles %}
 
@@ -10,10 +11,20 @@
 <form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}" onsubmit="selectCategories()">
     {% for category in categories %}
     <section id="category-{{ category.id }}-section" class="category-{{ category.id }}">
-        <h2 class="category-{{ category.id }}">{{ category.name }}</h2>
+        <h2 class="category-{{ category.id }}">{{ category.name }}
+            {% if category.explanation %}
+            <a href="#" data-balloon-length="medium" aria-label="{{ category.explanation }}"
+                data-balloon-pos="left"><small>?</small></a>
+            {% endif %}
+        </h2>
         <fieldset id="category-{{ category.id }}-fieldset" class="form-fieldset category-{{ category.id }}">
             {% for question in category.questions %}
-            <h3 class="category-{{ category.id }}">{{ question.question }}</h3>
+            <h3 class="category-{{ category.id }}">{{ question.question }}
+                {% if question.explanation %}
+                <a href="#" data-balloon-length="medium" aria-label="{{ question.explanation }}"
+                    data-balloon-pos="left"><small>?</small></a>
+                {% endif %}
+            </h3>
             <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
             {% if disabled %}
             <input type="range" name="{{ question.id }}" id="{{ question.id }}"
