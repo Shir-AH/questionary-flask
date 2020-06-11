@@ -42,5 +42,5 @@ def submit_questionary():
 @login_required
 @main.route('/questionary', methods=['GET', 'POST'])
 def questionary():
-    categories = Category.query.all()
+    categories = Category.query.order_by(Category.id).all()
     return render_template('questionary_with_jinja.html', categories=categories, user=current_user)

@@ -2,7 +2,8 @@
 
 {% block additional_styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
-<link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='balloon.css') }}">
+<!-- <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css"> -->
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% endblock additional_styles %}
 
@@ -13,16 +14,16 @@
     <section id="category-{{ category.id }}-section" class="category-{{ category.id }}">
         <h2 class="category-{{ category.id }}">{{ category.name }}
             {% if category.explanation %}
-            <a href="#" data-balloon-length="medium" aria-label="{{ category.explanation }}"
-                data-balloon-pos="left"><small>?</small></a>
+            <a href="#" data-balloon="{{ category.explanation }}" data-balloon-pos="left"
+                data-balloon-length="{{ category.explanation_size }}"><small>?</small></a>
             {% endif %}
         </h2>
         <fieldset id="category-{{ category.id }}-fieldset" class="form-fieldset category-{{ category.id }}">
             {% for question in category.questions %}
             <h3 class="category-{{ category.id }}">{{ question.question }}
                 {% if question.explanation %}
-                <a href="#" data-balloon-length="medium" aria-label="{{ question.explanation }}"
-                    data-balloon-pos="left"><small>?</small></a>
+                <a href="#" data-balloon="{{ question.explanation }}" data-balloon-pos="left"
+                    data-balloon-length="{{ question.explanation_size }}"><small>?</small></a>
                 {% endif %}
             </h3>
             <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
@@ -85,5 +86,9 @@
     document.getElementById('category-{{ category.id }}').click();
     {% endfor %}
     {% endif %}
+    // must have jquery to activate the tooltips... :(
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 {% endblock scripts %}

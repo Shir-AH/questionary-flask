@@ -64,6 +64,17 @@ class Category(db.Model):
     explanation = db.Column(db.Text)
     questions = db.relationship('Questions', backref='category', lazy=True)
 
+    @property
+    def explanation_size(self):
+        length = len(self.explanation)
+        if length < 20:
+            return 'small'
+        if length < 40:
+            return 'medium'
+        if length < 100:
+            return 'large'
+        return 'xlarge'
+
 
 class Questions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,6 +82,17 @@ class Questions(db.Model):
     explanation = db.Column(db.Text)
     category_name = db.Column(db.String, db.ForeignKey('category.name'))
     answers = db.relationship('Answer', backref='question', lazy=True)
+
+    @property
+    def explanation_size(self):
+        length = len(self.explanation)
+        if length < 20:
+            return 'small'
+        if length < 40:
+            return 'medium'
+        if length < 100:
+            return 'large'
+        return 'xlarge'
 
 
 class Answer(db.Model):
