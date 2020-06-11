@@ -1,4 +1,9 @@
 {% extends 'layout.html' %}
 {% block content %}
 <h1>ברוכים הבאים</h1>
+{% if site_data %}
+<p>
+    {{ site_data["welcome"] }}
+</p>
+{% endif %}
 {% endblock content %}

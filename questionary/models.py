@@ -83,7 +83,22 @@ class Answer(db.Model):
     wil_answer = db.Column(db.Integer, nullable=False, default=0)
 
 
+class SiteData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    reference = db.Column(db.String, nullable=True, unique=True)
+    value = db.Column(db.Text, nullable=True)
+
+    @classmethod
+    def data_dict(cls):
+        site_data = cls.query.all()
+        site_data_dict = {}
+        for site_data_obj in site_data:
+            site_data_dict[site_data_obj.reference] = site_data_obj.value
+        return site_data_dict
+
+
 admin.add_view(AppModelView(User, db.session))
 admin.add_view(AppModelView(Category, db.session))
 admin.add_view(AppModelView(Questions, db.session))
 admin.add_view(AppModelView(Answer, db.session))
+admin.add_view(AppModelView(SiteData, db.session))

@@ -1,6 +1,6 @@
 from flask import (render_template, request, Blueprint,
                    redirect, url_for, jsonify, make_response)
-from questionary.models import Category, Questions, Answer, User
+from questionary.models import Category, Questions, Answer, User, SiteData
 from questionary import db
 from flask_login import current_user, login_required
 import json
@@ -12,7 +12,7 @@ main = Blueprint('main', __name__)
 @main.route('/')
 @main.route('/home')
 def home():
-    return render_template('main.html')
+    return render_template('main.html', site_data=SiteData.data_dict())
 
 
 def grouped(iterable, n=2):
