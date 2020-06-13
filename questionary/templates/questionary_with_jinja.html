@@ -26,27 +26,32 @@
                     data-balloon-length="{{ question.explanation_size }}"><small>?</small></a>
                 {% endif %}
             </h3>
-            <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
-            {% if disabled %}
-            <input type="range" name="{{ question.id }}" id="{{ question.id }}"
-                class="category-{{ category.id }} form-control-range slider questionary-input"
-                value="{{ user.answer(question.id).exp_answer }}" disabled>
-            {% else %}
-            <input type="range" name="{{ question.id }}" id="{{ question.id }}"
-                class="category-{{ category.id }} form-control-range slider questionary-input"
-                value="{{ user.answer(question.id).exp_answer }}">
-            {% endif %}
+            <div class="row form-group">
+                <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
+                {% if disabled %}
+                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                    class="category-{{ category.id }} form-control-range slider questionary-input"
+                    value="{{ user.answer(question.id).exp_answer }}" disabled>
+                {% else %}
+                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                    class="category-{{ category.id }} form-control-range slider questionary-input"
+                    value="{{ user.answer(question.id).exp_answer }}">
+                {% endif %}
+
+            </div>
             <br>
-            <label for="{{ question.id }}s" class="category-{{ category.id }}">ניסיון</label>
-            {% if disabled %}
-            <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
-                class="category-{{ category.id }} form-control-range slider questionary-input"
-                value="{{ user.answer(question.id).wil_answer }}" disabled>
-            {% else %}
-            <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
-                class="category-{{ category.id }} form-control-range slider questionary-input"
-                value="{{ user.answer(question.id).wil_answer }}">
-            {% endif %}
+            <div class="row form-group">
+                <label for="{{ question.id }}s" class="category-{{ category.id }}">ניסיון</label>
+                {% if disabled %}
+                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                    class="category-{{ category.id }} form-control-range slider questionary-input"
+                    value="{{ user.answer(question.id).wil_answer }}" disabled>
+                {% else %}
+                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                    class="category-{{ category.id }} form-control-range slider questionary-input"
+                    value="{{ user.answer(question.id).wil_answer }}">
+                {% endif %}
+            </div>
             {% endfor %}
         </fieldset>
     </section>
@@ -62,7 +67,8 @@
 
 {% block content_section %}
 {% block content_section_header %}
-<h3>ניווט</h3>
+<h3>קטגוריות</h3>
+<p>שימו לב: קטגוריות לא מסומנות לא ישמרו ואחרים לא יראו אותן בעמוד התוצאות שלכם\ן.</p>
 {% endblock content_section_header %}
 <ul class="list-group" id="category-list">
     {% for category in categories %}

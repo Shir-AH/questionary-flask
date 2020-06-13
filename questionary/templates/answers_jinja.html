@@ -9,12 +9,11 @@
 {% endblock facebook_meta %}
 
 {% block submit %}
-
 {% endblock submit %}
 
 {% block sharing_options %}
 {% include 'facebook_share.jinja.html' %}
-<!-- <button type="button"><a href="{#{ url_for('main.answers_pdf', id=answer_id) }#}">הורדה כ-pdf</a></button> -->
+<button type="button"><a href="{{ url_for('users.answers_pdf', username=user.username) }}">הורדה כ-pdf</a></button>
 <script>
     function buttonPressed() {
         // copy the share message to clipborad and change the button text accordingly

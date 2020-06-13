@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint, jsonify
+from flask import render_template, url_for, flash, redirect, request, Blueprint, jsonify, make_response, abort
 from flask_login import login_user, current_user, logout_user, login_required
 from questionary import db, bcrypt
 from questionary.models import User, Category
@@ -8,6 +8,7 @@ from questionary.users.utils import (
     save_picture, send_reset_email, send_confirm_email, restricted)
 import json
 from datetime import datetime as dt
+import pdfkit
 
 users = Blueprint('users', __name__)
 
@@ -152,3 +153,26 @@ def user_results(username):
     categories = Category.query.filter(Category.id.in_(
         user.categories)).order_by(Category.id).all()
     return render_template('answers_jinja.html', categories=categories, user=user, disabled=True)
+
+
+@users.route('/user/<string:username>/answer/pdf', methods=['GET', 'POST'])
+@login_required
+def answers_pdf(username):
+    # only the owner can download his own pdf
+    if username != current_user.username:
+        abort(403)
+    rendered = render_template('pdf_template.html', user=current_user)
+
+    css = ['pdf.css']
+
+    pdf = pdfkit.from_string(
+        rendered,
+        False,
+        css=css
+    )
+
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=out.pdf'
+
+    return response

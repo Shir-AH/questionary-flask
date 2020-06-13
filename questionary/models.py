@@ -3,8 +3,6 @@ from datetime import datetime as dt
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
-from sqlalchemy import create_engine
-from sqlalchemy.dialects import postgresql
 
 
 @login_manager.user_loader
@@ -122,5 +120,4 @@ class SiteData(db.Model):
 admin.add_view(AppModelView(User, db.session))
 admin.add_view(AppModelView(Category, db.session))
 admin.add_view(AppModelView(Questions, db.session))
-admin.add_view(AppModelView(Answer, db.session))
 admin.add_view(AppModelView(SiteData, db.session))

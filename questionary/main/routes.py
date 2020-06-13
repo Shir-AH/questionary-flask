@@ -4,7 +4,6 @@ from questionary.models import Category, Questions, Answer, User, SiteData
 from questionary import db
 from flask_login import current_user, login_required
 import json
-# import pdfkit
 
 main = Blueprint('main', __name__)
 
