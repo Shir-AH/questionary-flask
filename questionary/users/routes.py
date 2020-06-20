@@ -161,14 +161,25 @@ def answers_pdf(username):
     # only the owner can download his own pdf
     if username != current_user.username:
         abort(403)
-    rendered = render_template('pdf_template.html', user=current_user)
+    user = User.query.filter_by(username=username).first_or_404()
+    categories = Category.query.filter(Category.id.in_(
+        user.categories)).order_by(Category.id).all()
+    rendered = render_template(
+        'pdf_template.html', categories=categories, user=user, link=url_for('main.home', _external=True))
 
-    css = ['pdf.css']
-
+    # css = ['pdf.css']
+    options = {
+        'page-size': 'A4',
+        'margin-top': '0.75in',
+        'margin-right': '0.75in',
+        'margin-bottom': '0.75in',
+        'margin-left': '0.75in',
+    }
     pdf = pdfkit.from_string(
         rendered,
         False,
-        css=css
+        options=options
+        # css=css
     )
 
     response = make_response(pdf)

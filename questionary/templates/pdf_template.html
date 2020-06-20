@@ -2,85 +2,131 @@
 <html dir="rtl">
 
 <head>
-    <!-- Required meta tags -->
+
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>שאלון</title>
+    <style type="text/css">
+        body {
+            color: #333333;
+            margin-top: 5rem;
+            margin-bottom: 5rem;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        div .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #444444;
+            margin: 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        h2,
+        h3 {
+            margin: 1rem;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+        }
+
+        form {
+            color: #555555;
+        }
+
+        span {
+            vertical-align: top;
+        }
+
+        fieldset {
+            border: solid;
+            border-color: #eeeeee;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        label {
+            margin-right: 1rem;
+        }
+
+        input {
+            margin: 0.5rem;
+        }
+
+        #sitelink {
+            text-align: left;
+            text-decoration: none;
+        }
+
+        .keep-together {
+            page-break-inside: avoid;
+        }
+
+        .break-before {
+            page-break-before: always;
+        }
+
+        .break-after {
+            page-break-after: always;
+        }
+
+        input[type='range'] {
+            border: solid 0 transparent;
+            border-width: 0 1em;
+            width: 32em;
+            height: 1em;
+            border-radius: .25em;
+            background: transparent;
+            font-size: 1em;
+        }
+    </style>
 </head>
 
 <body>
-    <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-            <div class="container">
-                <a class="navbar-brand mr-4" href="{{ url_for('main.home') }}">שאלון</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
-                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarToggle">
-                    <div class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link" href="{{ url_for('main.home') }}">בית</a>
-                        {% if current_user.is_authenticated and current_user.has_results %}
-                        <a class="nav-item nav-link"
-                            href="{{ url_for('users.user_results', username=current_user.username) }}">צפו בתשובות
-                            שלכם</a>
-                        <a class="nav-item nav-link" href="{{ url_for('main.questionary') }}">עדכון תשובות</a>
-                        {% else %}
-                        <a class="nav-item nav-link" href="{{ url_for('main.questionary') }}">ענו על השאלון</a>
-                        {% endif %}
-                    </div>
-                    <!-- Navbar Right Side -->
-                    <div class="navbar-nav">
-                        {% if current_user.is_authenticated %}
-                        <span class="nav-item nav-link">שלום <b>{{ current_user.username }}</b>!</span>
-                        <a class="nav-item nav-link" href="{{ url_for('users.account') }}">משתמש</a>
-                        <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">התנתקות</a>
-                        {% else %}
-                        <a class="nav-item nav-link" href="{{ url_for('users.login') }}">התחברות</a>
-                        <a class="nav-item nav-link" href="{{ url_for('users.register') }}">הרשמה</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
     <main role="main" class="container">
-        <div class="row">
-            <div class="col-md-8">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
+        <div class="col">
+            <h2 id="sitelink"><a href="{{ link }}">קינקיברי</a></h2>
+            <h1>התשובות של {{ user.username }}</h1>
+            <form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}"
+                onsubmit="selectCategories()">
+                {% for category in categories %}
+                <section id="category-{{ category.id }}-section" class="category-{{ category.id }} keep-together">
+                    <h2 class="category-{{ category.id }}">{{ category.name }}</h2>
+                    <fieldset id="category-{{ category.id }}-fieldset" class="form-fieldset category-{{ category.id }}">
+                        {% for question in category.questions %}
+                        <h3 class="category-{{ category.id }}">{{ question.question }}</h3>
+                        <div class="row">
+                            <span>לא רוצה בכלל</span>
+                            <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                                class="category-{{ category.id }} form-control-range slider questionary-input"
+                                value="{{ user.answer(question.id).exp_answer }}" disabled>
+                            <span>רוצה מאוד</span>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <span>לא ניסיתי בכלל</span>
+                            <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                                class="category-{{ category.id }} form-control-range slider questionary-input"
+                                value="{{ user.answer(question.id).wil_answer }}" disabled>
+                            <span>מנוסה מאוד</span>
+                        </div>
+                        {% endfor %}
+                    </fieldset>
+                </section>
                 {% endfor %}
-                {% endif %}
-                {% endwith %}
-                {% block content %}
-                {% endblock content %}
-            </div>
-            <div class="col-md-3" id="sidebar">
-                <div class="content-section">
-                    {% block content_section %}
-                    {% endblock content_section %}
-                </div>
-            </div>
+            </form>
         </div>
     </main>
-    {% block scripts %}
-    {% endblock scripts %}
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.rtlcss.com/bootstrap/v4.2.1/js/bootstrap.min.js"
-        integrity="sha384-a9xOd0rz8w0J8zqj1qJic7GPFfyMfoiuDjC9rqXlVOcGO/dmRqzMn34gZYDTel8k"
-        crossorigin="anonymous"></script>
 </body>
-
-</html>
