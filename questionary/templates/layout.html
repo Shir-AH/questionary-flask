@@ -17,13 +17,20 @@
     {% block facebook_meta %}
     <meta property="og:description" content="אתר הקינק והBDSM העברי" />
     {% endblock facebook_meta %}
+
     <!-- Bootstrap RTL CSS -->
     <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css"
         integrity="sha384-vus3nQHTD+5mpDiZ4rkEPlnkcyTP+49BhJ4wJeJunw06ZAp+wzzeBPUXr42fi8If" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    {% block additional_styles %}
 
+    <!-- Drop.js libs  -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='drop-theme-arrows.css') }}" />
+    <script src="{{ url_for('static', filename='tether.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='drop.min.js') }}"></script>
+
+    {% block additional_styles %}
     {% endblock additional_styles %}
+
     <title>שאלון</title>
     {% endblock head %}
 </head>
