@@ -90,3 +90,8 @@ label {
   text-align: center;
   align-self: center;
 }
+
+button a {
+  text-decoration: none;
+  color: whitesmoke;
+}
