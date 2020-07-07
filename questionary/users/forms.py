@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, URL, Optional
 from flask_login import current_user
 from questionary.models import User
+import requests
 
 
 class RegistrationForm(FlaskForm):
@@ -73,3 +74,15 @@ class ResetPasswordForm(FlaskForm):
     confirm_password = PasswordField('אישור סיסמה', validators=[
         DataRequired(), EqualTo('password')])
     submit = SubmitField('שנה סיסמה')
+
+
+class UpdateProfileForm(FlaskForm):
+    gender = SelectField('מגדר', choices=[('גבר', 'גבר'), ('אישה', 'אישה'), ('א-מגדר', 'א-מגדר'),
+                                          ('לא בינארי', 'לא בינארי'), ('אחר', 'אחר'), ('מעדיפים לא לומר', 'מעדיפים לא לומר')])
+    show_gender = BooleanField('הראה מגדר')
+    looking_for = SelectField('אני מחפש\\ת', choices=[('שולט\\ת', 'שולט\\ת'), (
+        'בן\\בת זוג', 'בן\\בת זוג'), ('כלום', 'כלום'), ('חברים לחיים', 'חברים לחיים')])
+    show_looking = BooleanField('הראה מה אני מחפש\\ת')
+    about = TextAreaField('על עצמי')
+    link = StringField('לינק לאתר אישי', validators=[Optional(), URL()])
+    submit = SubmitField('עדכון')

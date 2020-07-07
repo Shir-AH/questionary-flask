@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+{% block additional_styles %}
+<style>
+    label {
+        white-space: nowrap;
+        display: inline-block;
+        width: 100px;
+        text-align: right;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+    }
+
+    table,
+    th,
+    tr,
+    td {
+        padding: 15px;
+        text-align: right;
+        vertical-align: middle;
+    }
+</style>
+{% endblock additional_styles %}
+{% block content %}
+<div class="content-section">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset class="form=group">
+            <legend class="border-bottom mb-4">עדכון פרופיל</legend>
+            <table>
+                <tr>
+                    <td>
+                        {{ form.gender.label(class="form-control-label") }}
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            {% if form.gender.errors %}
+                            {{ form.gender(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.gender.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ form.gender(class="form-control form-control-lg") }}
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-row">
+                            {{ form.show_gender.label(class="form-check-label") }}
+                            {{ form.show_gender(class="form-check-input") }}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.looking_for.label(class="form-control-label") }}
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            {% if form.looking_for.errors %}
+                            {{ form.looking_for(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.looking_for.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            {{ form.looking_for(class="form-control form-control-lg") }}
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-row">
+                            {{ form.show_looking.label(class="form-check-label") }}
+                            {{ form.show_looking(class="form-check-input") }}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="form-group">
+                {{ form.about.label(class="form-control-label") }}
+                {% if form.about.errors %}
+                {{ form.about(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.about.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.about(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <div class="form-group">
+                {{ form.link.label(class="form-control-label") }}
+                {% if form.link.errors %}
+                {{ form.link(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.link.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.link(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>
+{% endblock content %}
+
+{% block content_section %}
+{% include 'user_content_section.jinja.html' %}
+{% endblock content_section %}

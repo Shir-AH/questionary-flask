@@ -1,0 +1,27 @@
+<style>
+    #sidebar {
+        visibility: visible;
+    }
+</style>
+<h3>החשבון שלי</h3>
+<br>
+<ul class="list-group" id="category-list">
+    {% if not user %}
+    {% set user = current_user %}
+    {% endif %}
+    {% if user.username == current_user.username %}
+    <li class="list-group-item"><a href="{{ url_for('users.account') }}">החשבון שלי</a></li>
+    <li class="list-group-item"><a href="{{ url_for('users.profile', username=current_user.username) }}">הפרופיל שלי</a>
+    </li>
+    <li class="list-group-item"><a href="{{ url_for('users.user_results', username=current_user.username) }}">התשובות
+            שלי</a>
+    </li>
+    {% else %}
+    <li class="list-group-item"><a href="{{ url_for('users.profile', username=user.username) }}">הפרופיל של
+            {{ user.username }}</a>
+    </li>
+    <li class="list-group-item"><a href="{{ url_for('users.user_results', username=user.username) }}">התשובות
+            של {{ user.username }}</a>
+    </li>
+    {% endif %}
+</ul>

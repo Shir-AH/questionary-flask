@@ -3,7 +3,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from questionary import db, bcrypt
 from questionary.models import User, Category
 from questionary.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
-                                     RequestResetForm, ResetPasswordForm, RequestConfirmForm)
+                                     RequestResetForm, ResetPasswordForm, RequestConfirmForm,
+                                     UpdateProfileForm)
 from questionary.users.utils import (
     save_picture, send_reset_email, send_confirm_email, restricted)
 import json
@@ -43,7 +44,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('main.home'))
+            return redirect(next_page) if next_page else redirect(url_for('users.profile', username=user.username))
         else:
             flash('סיסמה או מייל לא נכונים, נסו שוב.', 'danger')
     return render_template('login.html', title='כניסה', form=form)
@@ -75,6 +76,38 @@ def account():
     image_file = url_for(
         'static', filename=f'profile_pics/{current_user.image_file}')
     return render_template('account.html', title='חשבון', image_file=image_file, form=form)
+
+
+@users.route('/profile/<string:username>')
+@login_required
+def profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    image_file = url_for(
+        'static', filename=f'profile_pics/{user.image_file}')
+    return render_template('profile.html', user=user, image_file=image_file)
+
+
+@users.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        current_user.gender = form.gender.data
+        current_user.show_gender = form.show_gender.data
+        current_user.looking_for = form.looking_for.data
+        current_user.show_looking = form.show_looking.data
+        current_user.about = form.about.data
+        current_user.external_link = form.link.data
+        db.session.commit()
+        return redirect(url_for('users.profile', username=current_user.username))
+    elif request.method == 'GET':
+        form.gender.data = current_user.gender
+        form.show_gender.data = current_user.show_gender
+        form.looking_for.data = current_user.looking_for
+        form.show_looking.data = current_user.show_looking
+        form.about.data = current_user.about
+        form.link.data = current_user.external_link
+    return render_template('edit_profile.html', form=form)
 
 
 @users.route('/reset_password', methods=['GET', 'POST'])

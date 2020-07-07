@@ -8,7 +8,7 @@
 {% endblock additional_styles %}
 
 {% block content %}
-<h1>התשובות של {{ user.username }}</h1>
+<h1>התשובות של <a href="{{ url_for('users.profile', username=user.username) }}">{{ user.username }}</a></h1>
 <form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}" onsubmit="selectCategories()">
     {% for category in categories %}
     <section id="category-{{ category.id }}-section" class="category-{{ category.id }}">

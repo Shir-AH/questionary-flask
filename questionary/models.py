@@ -21,6 +21,12 @@ class User(db.Model, UserMixin):
     categories = db.Column(db.ARRAY(db.Integer()))
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime)
+    external_link = db.Column(db.String(120))
+    gender = db.Column(db.String(60))
+    show_gender = db.Column(db.Boolean, default=False)
+    looking_for = db.Column(db.String(60))
+    show_looking = db.Column(db.Boolean, default=False)
+    about = db.Column(db.Text)
 
     def __repr__(self):
         return f"User '{self.username}', '{self.email}'"
@@ -117,7 +123,12 @@ class SiteData(db.Model):
         return site_data_dict
 
 
-admin.add_view(AppModelView(User, db.session))
+class UserView(AppModelView):
+    form_columns = ['id', 'username', 'email', 'confirmed',
+                    'confirmed_on', 'external_link', 'gender', 'looking_for', 'about']
+
+
+admin.add_view(UserView(User, db.session))
 admin.add_view(AppModelView(Category, db.session))
 admin.add_view(AppModelView(Questions, db.session))
 admin.add_view(AppModelView(SiteData, db.session))
