@@ -3,60 +3,111 @@
 {% block additional_styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='balloon.css') }}">
-<!-- <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css"> -->
-<script src="{{ url_for('static', filename='main.js') }}"></script>
+<style>
+    .carousel-control-prev,
+    .carousel-control-next {
+        /* Aligns it at the bottom */
+        align-items: flex-end;
+        position: absolute;
+    }
+
+    .carousel {
+        margin-left: 60px;
+        margin-right: 60px;
+    }
+
+    .carousel-control-next {
+        margin-left: -65px;
+    }
+
+    .carousel-control-prev {
+        margin-right: -65px;
+    }
+</style>
 {% endblock additional_styles %}
 
 {% block content %}
+<!-- experimental carousel here -->
 <h1>התשובות של <a href="{{ url_for('users.profile', username=user.username) }}">{{ user.username }}</a></h1>
 <form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}" onsubmit="selectCategories()">
-    {% for category in categories %}
-    <section id="category-{{ category.id }}-section" class="category-{{ category.id }}">
-        <h2 class="category-{{ category.id }}">{{ category.name }}
-            {% if category.explanation %}
-            <a href="#" data-balloon="{{ category.explanation }}" data-balloon-pos="left"
-                data-balloon-length="{{ category.explanation_size }}"><small>?</small></a>
-            {% endif %}
-        </h2>
-        <fieldset id="category-{{ category.id }}-fieldset" class="form-fieldset category-{{ category.id }}">
-            {% for question in category.questions %}
-            <h3 class="category-{{ category.id }}">{{ question.question }}
-                {% if question.explanation %}
-                <a href="#" data-balloon="{{ question.explanation }}" data-balloon-pos="left"
-                    data-balloon-length="{{ question.explanation_size }}"><small>?</small></a>
-                {% endif %}
-            </h3>
-            <div class="row form-group">
-                <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
-                {% if disabled %}
-                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
-                    class="category-{{ category.id }} form-control-range slider questionary-input"
-                    value="{{ user.answer(question.id).exp_answer }}" disabled>
-                {% else %}
-                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
-                    class="category-{{ category.id }} form-control-range slider questionary-input"
-                    value="{{ user.answer(question.id).exp_answer }}">
-                {% endif %}
-
-            </div>
-            <br>
-            <div class="row form-group">
-                <label for="{{ question.id }}s" class="category-{{ category.id }}">ניסיון</label>
-                {% if disabled %}
-                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
-                    class="category-{{ category.id }} form-control-range slider questionary-input"
-                    value="{{ user.answer(question.id).wil_answer }}" disabled>
-                {% else %}
-                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
-                    class="category-{{ category.id }} form-control-range slider questionary-input"
-                    value="{{ user.answer(question.id).wil_answer }}">
-                {% endif %}
+    <div id="carousel" class="carousel slide" data-ride="false" data-interval="false">
+        <div class="carousel-inner">
+            {% for category in categories %}
+            <div class="carousel-item">
+                <section id="category-{{ category.id }}-section" class="category-{{ category.id }}">
+                    <h2 class="category-{{ category.id }}">{{ category.name }}
+                        {% if category.explanation %}
+                        <a href="#" data-balloon="{{ category.explanation }}" data-balloon-pos="left"
+                            data-balloon-length="{{ category.explanation_size }}"><small>?</small></a>
+                        {% endif %}
+                    </h2>
+                    <fieldset id="category-{{ category.id }}-fieldset" class="form-fieldset category-{{ category.id }}">
+                        <div class="m-3">
+                            {% for question in category.questions %}
+                            <h3 class="category-{{ category.id }}">{{ question.question }}
+                                {% if question.explanation %}
+                                <a href="#" data-balloon="{{ question.explanation }}" data-balloon-pos="left"
+                                    data-balloon-length="{{ question.explanation_size }}"><small>?</small></a>
+                                {% endif %}
+                            </h3>
+                            <div class="row form-group">
+                                <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
+                                {% if disabled %}
+                                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                                    class="category-{{ category.id }} form-control-range slider questionary-input"
+                                    value="{{ user.answer(question.id).exp_answer }}" disabled>
+                                {% else %}
+                                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                                    class="category-{{ category.id }} form-control-range slider questionary-input"
+                                    value="{{ user.answer(question.id).exp_answer }}">
+                                {% endif %}
+                            </div>
+                            <br>
+                            <div class="row form-group">
+                                <label for="{{ question.id }}s" class="category-{{ category.id }}">ניסיון</label>
+                                {% if disabled %}
+                                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                                    class="category-{{ category.id }} form-control-range slider questionary-input"
+                                    value="{{ user.answer(question.id).wil_answer }}" disabled>
+                                {% else %}
+                                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                                    class="category-{{ category.id }} form-control-range slider questionary-input"
+                                    value="{{ user.answer(question.id).wil_answer }}">
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                </section>
             </div>
             {% endfor %}
-        </fieldset>
-    </section>
-    {% endfor %}
+            <script>document.getElementsByClassName('carousel-item')[0].classList.add('active');</script>
+        </div>
+        <br>
+        <div class="carousel-control m-2">
+            <a class="carousel-control-prev left" href="#carousel" role="button" data-slide="prev">
+                <button class="btn btn-secondary">הקודם</button>
+            </a>
+            <a class="carousel-control-next right" href="#carousel" role="button" data-slide="next">
+                <button class="btn btn-secondary">הבא</button>
+            </a>
+        </div>
+    </div>
+    <br>
     {% block submit %}
+    <hr>
+    <fieldset class="form-fieldset carousel">
+        <div class="m-2">
+            <h3>בחרו אילו קטגוריות אחרים יראו</h3>
+            <p class="m-2">שימו לב: קטגוריות לא מסומנות לא ישמרו ואחרים לא יראו אותן בעמוד התוצאות שלכם\ן.</p>
+            {% for category in categories %}
+            <input type="checkbox" id="category-{{ category.id }}-checkbox" name="category-{{ category.id }}-checkbox"
+                value="{{ category.name }}">
+            <label for="category-{{ category.id }}-checkbox">{{ category.name }}</label>
+            <br>
+            {% endfor %}
+        </div>
+    </fieldset>
     <input class="btn btn-outline-info questionary-input questionary-button" type="submit" name="submit" id="submit"
         value="סיימתי">
     {% endblock submit %}
@@ -64,37 +115,3 @@
 {% block sharing_options %}
 {% endblock sharing_options %}
 {% endblock content %}
-
-{% block content_section %}
-{% block content_section_header %}
-<h3>קטגוריות</h3>
-<p>שימו לב: קטגוריות לא מסומנות לא ישמרו ואחרים לא יראו אותן בעמוד התוצאות שלכם\ן.</p>
-{% endblock content_section_header %}
-<ul class="list-group" id="category-list">
-    {% for category in categories %}
-    <li id="category-{{ category.id }}" class="list-group-item category-selector chosen" onclick="toggleCategory()">
-        {{ category.name }}
-    </li>
-    {% endfor %}
-    <li id="all-categories" class="list-group-item chosen" onclick="showAllCategories()">הצג הכל</li>
-</ul>
-{% endblock content_section %}
-
-{% block scripts %}
-<script>
-    for (const elm of document.getElementById('category-list').getElementsByClassName('category-selector'))
-        elm.addEventListener('click', toggleCategory);
-    document.getElementById('all-categories').addEventListener('click', showAllCategories);
-    // simulate a click on the item to hide unselected categories when they are availible
-    let event = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
-    {% if user.categories %}
-    {% for category in categories if not category.id in user.categories %}
-    document.getElementById('category-{{ category.id }}').click();
-    {% endfor %}
-    {% endif %}
-    // must have jquery to activate the tooltips... :(
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-</script>
-{% endblock scripts %}

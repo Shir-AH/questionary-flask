@@ -21,6 +21,7 @@ def grouped(iterable, n=2):
 @login_required
 @main.route('/submit_questionary', methods=['POST'])
 def submit_questionary():
+    # add new category mechanism handeling
     if request.method == 'POST':
         results_dict = request.form.to_dict()
         if current_user.is_authenticated:
