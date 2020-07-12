@@ -27,7 +27,6 @@
 {% endblock additional_styles %}
 
 {% block content %}
-<!-- experimental carousel here -->
 <h1>התשובות של <a href="{{ url_for('users.profile', username=user.username) }}">{{ user.username }}</a></h1>
 <form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}" onsubmit="selectCategories()">
     <div id="carousel" class="carousel slide" data-ride="false" data-interval="false">
@@ -84,6 +83,7 @@
             <script>document.getElementsByClassName('carousel-item')[0].classList.add('active');</script>
         </div>
         <br>
+        {% if categories|length > 1 %}
         <div class="carousel-control m-2">
             <a class="carousel-control-prev left" href="#carousel" role="button" data-slide="prev">
                 <button class="btn btn-secondary">הקודם</button>
@@ -92,6 +92,7 @@
                 <button class="btn btn-secondary">הבא</button>
             </a>
         </div>
+        {% endif %}
     </div>
     <br>
     {% block submit %}
@@ -102,7 +103,7 @@
             <p class="m-2">שימו לב: קטגוריות לא מסומנות לא ישמרו ואחרים לא יראו אותן בעמוד התוצאות שלכם\ן.</p>
             {% for category in categories %}
             <input type="checkbox" id="category-{{ category.id }}-checkbox" name="category-{{ category.id }}-checkbox"
-                value="{{ category.name }}">
+                value="{{ category.id }}">
             <label for="category-{{ category.id }}-checkbox">{{ category.name }}</label>
             <br>
             {% endfor %}

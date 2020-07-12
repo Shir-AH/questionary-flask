@@ -200,7 +200,6 @@ def answers_pdf(username):
     rendered = render_template(
         'pdf_template.html', categories=categories, user=user, link=url_for('main.home', _external=True))
 
-    # css = ['pdf.css']
     options = {
         'page-size': 'A4',
         'margin-top': '0.75in',
@@ -212,7 +211,6 @@ def answers_pdf(username):
         rendered,
         False,
         options=options
-        # css=css
     )
 
     response = make_response(pdf)
