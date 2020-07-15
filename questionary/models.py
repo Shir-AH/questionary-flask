@@ -5,6 +5,30 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 
 
+# user relationships helper table
+# user_relationships = db.Table('user_relationships',
+#                               db.Column('master_user_id', db.Integer, db.ForeignKey(
+#                                   'user.id'), primary_key=True),
+#                               db.Column('slave_user_id', db.Integer, db.ForeignKey(
+#                                   'user.id'), primary_key=True)
+#                               db.Column('relationship_description',
+#                                         db.String(120))
+#                               )
+
+
+class RelationshipObject(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    slave = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), primary_key=True)
+    master = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), primary_key=True)
+    slave_description = db.Column(db.String(120))
+    master_description = db.Column(db.String(120))
+    confirmed = db.Column(db.Boolean(), nullable=False, default=False)
+    relationship_time = db.Column(
+        db.DateTime, nullable=False, default=dt.utcnow)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -27,6 +51,10 @@ class User(db.Model, UserMixin):
     looking_for = db.Column(db.String(60))
     show_looking = db.Column(db.Boolean, default=False)
     about = db.Column(db.Text)
+    slaves = db.relationship('RelationshipObject', backref='slaves',
+                             primaryjoin=(id == RelationshipObject.slave))
+    masters = db.relationship('RelationshipObject', backref='masters',
+                              primaryjoin=(id == RelationshipObject.master))
 
     def __repr__(self):
         return f"User '{self.username}', '{self.email}'"
