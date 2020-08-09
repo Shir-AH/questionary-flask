@@ -27,7 +27,11 @@
 {% endblock additional_styles %}
 
 {% block content %}
+{% if user.username and disabled %}
 <h1>התשובות של <a href="{{ url_for('users.profile', username=user.username) }}">{{ user.username }}</a></h1>
+{% else %}
+<h1>שאלון הגבולות והנטיות של קינקיברי</h1>
+{% endif %}
 <form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}" onsubmit="selectCategories()">
     <div id="carousel" class="carousel slide" data-ride="false" data-interval="false">
         <div class="carousel-inner">
@@ -51,27 +55,33 @@
                             </h3>
                             <div class="row form-group">
                                 <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
-                                {% if disabled %}
+                                {% if disabled and user.answer %}
                                 <input type="range" name="{{ question.id }}" id="{{ question.id }}"
                                     class="category-{{ category.id }} form-control-range slider questionary-input"
                                     value="{{ user.answer(question.id).exp_answer }}" disabled>
-                                {% else %}
+                                {% elif user.answer %}
                                 <input type="range" name="{{ question.id }}" id="{{ question.id }}"
                                     class="category-{{ category.id }} form-control-range slider questionary-input"
                                     value="{{ user.answer(question.id).exp_answer }}">
+                                {% else %}
+                                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                                    class="category-{{ category.id }} form-control-range slider questionary-input">
                                 {% endif %}
                             </div>
                             <br>
                             <div class="row form-group">
                                 <label for="{{ question.id }}s" class="category-{{ category.id }}">ניסיון</label>
-                                {% if disabled %}
+                                {% if disabled and user.answer %}
                                 <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
                                     class="category-{{ category.id }} form-control-range slider questionary-input"
                                     value="{{ user.answer(question.id).wil_answer }}" disabled>
-                                {% else %}
+                                {% elif user.answer %}
                                 <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
                                     class="category-{{ category.id }} form-control-range slider questionary-input"
                                     value="{{ user.answer(question.id).wil_answer }}">
+                                {% else %}
+                                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                                    class="category-{{ category.id }} form-control-range slider questionary-input">
                                 {% endif %}
                             </div>
                             {% endfor %}
