@@ -183,6 +183,8 @@ def confirmation_needed():
 @users.route('/user/<string:username>/answer')
 def user_results(username):
     user = User.query.filter_by(username=username).first_or_404()
+    if not user.categories:
+        abort(404)
     categories = Category.query.filter(Category.id.in_(
         user.categories)).order_by(Category.id).all()
     return render_template('answers_jinja.html', categories=categories, user=user, disabled=True)

@@ -18,8 +18,8 @@ def grouped(iterable, n=2):
     return zip(*[iter(iterable)]*n)
 
 
-@login_required
 @main.route('/submit_questionary', methods=['POST'])
+@login_required
 def submit_questionary():
     # add new category mechanism handeling
     if request.method == 'POST':
@@ -49,8 +49,8 @@ def submit_questionary():
     return redirect(url_for('main.questionary'))
 
 
-@login_required
 @main.route('/questionary', methods=['GET', 'POST'])
+@login_required
 def questionary():
     categories = Category.query.order_by(Category.id).all()
     return render_template('questionary_with_jinja.html', categories=categories, user=current_user)
