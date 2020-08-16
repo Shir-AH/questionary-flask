@@ -199,7 +199,8 @@ def answers_pdf(username):
         user.categories)).order_by(Category.id).all()
     rendered = render_template(
         'pdf_template.html', categories=categories, user=user, link=url_for('main.home', _external=True))
-
+    config = pdfkit.configuration(
+        wkhtmltopdf=r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
     options = {
         'page-size': 'A4',
         'margin-top': '0.75in',
@@ -210,7 +211,8 @@ def answers_pdf(username):
     pdf = pdfkit.from_string(
         rendered,
         False,
-        options=options
+        options=options,
+        configuration=config
     )
 
     response = make_response(pdf)
