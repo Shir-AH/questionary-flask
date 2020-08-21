@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
 {% block additional_styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='balloon.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
 <style>
     .carousel-control-prev,
     .carousel-control-next {
@@ -54,35 +54,53 @@
                                 {% endif %}
                             </h3>
                             <div class="row form-group">
-                                <label for="{{ question.id }}" class="category-{{ category.id }}">רצון</label>
-                                {% if disabled and user.answer %}
-                                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
-                                    class="category-{{ category.id }} form-control-range slider questionary-input"
-                                    value="{{ user.answer(question.id).exp_answer }}" disabled>
-                                {% elif user.answer %}
-                                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
-                                    class="category-{{ category.id }} form-control-range slider questionary-input"
-                                    value="{{ user.answer(question.id).exp_answer }}">
-                                {% else %}
-                                <input type="range" name="{{ question.id }}" id="{{ question.id }}"
-                                    class="category-{{ category.id }} form-control-range slider questionary-input">
-                                {% endif %}
+                                <table>
+                                    <tr>
+                                        <td class="label-cell">
+                                            <label for="{{ question.id }}"
+                                                class="category-{{ category.id }}">רצון</label>
+                                        </td>
+                                        <td class="range-cell">
+                                            {% if disabled and user.answer %}
+                                            <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                                                class="category-{{ category.id }} form-control-range slider questionary-input"
+                                                value="{{ user.answer(question.id).exp_answer }}" disabled>
+                                            {% elif user.answer %}
+                                            <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                                                class="category-{{ category.id }} form-control-range slider questionary-input"
+                                                value="{{ user.answer(question.id).exp_answer }}">
+                                            {% else %}
+                                            <input type="range" name="{{ question.id }}" id="{{ question.id }}"
+                                                class="category-{{ category.id }} form-control-range slider questionary-input">
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                             <br>
                             <div class="row form-group">
-                                <label for="{{ question.id }}s" class="category-{{ category.id }}">ניסיון</label>
-                                {% if disabled and user.answer %}
-                                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
-                                    class="category-{{ category.id }} form-control-range slider questionary-input"
-                                    value="{{ user.answer(question.id).wil_answer }}" disabled>
-                                {% elif user.answer %}
-                                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
-                                    class="category-{{ category.id }} form-control-range slider questionary-input"
-                                    value="{{ user.answer(question.id).wil_answer }}">
-                                {% else %}
-                                <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
-                                    class="category-{{ category.id }} form-control-range slider questionary-input">
-                                {% endif %}
+                                <table>
+                                    <tr>
+                                        <td class="label-cell">
+                                            <label for="{{ question.id }}s"
+                                                class="category-{{ category.id }}">ניסיון</label>
+                                        </td>
+                                        <td class="range-cell">
+                                            {% if disabled and user.answer %}
+                                            <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                                                class="category-{{ category.id }} form-control-range slider questionary-input"
+                                                value="{{ user.answer(question.id).wil_answer }}" disabled>
+                                            {% elif user.answer %}
+                                            <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                                                class="category-{{ category.id }} form-control-range slider questionary-input"
+                                                value="{{ user.answer(question.id).wil_answer }}">
+                                            {% else %}
+                                            <input type="range" name="{{ question.id }}s" id="{{ question.id }}s"
+                                                class="category-{{ category.id }} form-control-range slider questionary-input">
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                             {% endfor %}
                         </div>

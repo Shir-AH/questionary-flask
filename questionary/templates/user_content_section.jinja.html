@@ -16,17 +16,21 @@
 <ul class="list-group" id="category-list">
     <li class="list-group-item"><a href="{{ url_for('users.profile', username=current_user.username) }}">הפרופיל שלי</a>
     </li>
+    {% if user.categories %}
     <li class="list-group-item"><a href="{{ url_for('users.user_results', username=current_user.username) }}">התשובות
             שלי</a>
     </li>
+    {% endif %}
     <li class="list-group-item"><a href="{{ url_for('main.questionary') }}">עדכון התשובות שלי</a></li>
 </ul>
 {% else %}
 <h4><a href="{{ url_for('users.profile', username=user.username) }}">הפרופיל של
         {{ user.username }}</a></h4>
 <ul class="list-group" id="category-list">
+    {% if user.categories %}
     <li class="list-group-item"><a href="{{ url_for('users.user_results', username=user.username) }}">התשובות
             של {{ user.username }}</a>
     </li>
+    {% endif %}
 </ul>
 {% endif %}

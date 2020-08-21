@@ -84,6 +84,7 @@ input[type='range']:focus {
 
 h2, h3 {
     margin: 1rem;
+    margin-right: 0rem;
 }
 
 h1 {
@@ -106,9 +107,9 @@ fieldset {
     background-color: var(--hover-bg-color);
 }
 
-label {
+/* label {
     margin-right: 1rem;
-}
+} */
 
 input {
     margin: 0.5rem;
@@ -134,4 +135,11 @@ li {
 
 #copyme {
     display: none;
+}
+
+.label-cell {
+    align-items: right;
+    align-content: right;
+    max-width: 70px;
+    width: min-content;
 }

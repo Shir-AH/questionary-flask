@@ -29,7 +29,7 @@ def register():
         login_user(user)
         send_confirm_email(user)
         flash(
-            f'חשבון נוצר בעבור {form.username.data}.<br>אנא אשרו את המשתמש באמצעות המייל שקיבלתם לכתובת {form.email.data}.', 'success')
+            f'חשבון נוצר בעבור {form.username.data}.אנא אשרו את המשתמש באמצעות המייל שקיבלתם לכתובת {form.email.data}.', 'success')
         return redirect(url_for('main.home'))
     return render_template('register.html', title='הרשמה', form=form)
 
