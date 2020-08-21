@@ -1,3 +1,16 @@
+:root {
+    --dark-bg-color: #1a1819;
+    --medium-bg-color: #3A3A40;
+    --light-bg-color: #4b4b4c;
+    --hover-bg-color: #49494B;
+    --dark-text-color: #B1B1B9;
+    --light-text-color: #EFE7E6;
+    --header-color: #B84244;
+    --link-color: #986162;
+    --link-hover-color: #A26D6E;
+    --lighter-bg-color: #565658;
+}
+
 input[type='range'] {
     border: solid 0 transparent;
     border-width: 0 1em;
@@ -78,18 +91,19 @@ h1 {
 }
 
 form {
-    color: #555555;
+    color: var(--dark-text-color);
 }
 
 fieldset {
+    background-color: var(--light-bg-color);
     border: solid;
-    border-color: #eeeeee;
+    border-color: var(--light-text-color);
     border-radius: 1rem;
     margin-bottom: 2rem;
 }
 
 .form-fieldset:hover {
-    background-color: #f5f5f5;
+    background-color: var(--hover-bg-color);
 }
 
 label {
@@ -111,6 +125,7 @@ input {
 
 li {
     font-weight: normal;
+    background-color: var(--lighter-bg-color);
 }
 
 .chosen {

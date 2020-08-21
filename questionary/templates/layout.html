@@ -21,7 +21,13 @@
     <!-- Bootstrap RTL CSS -->
     <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css"
         integrity="sha384-vus3nQHTD+5mpDiZ4rkEPlnkcyTP+49BhJ4wJeJunw06ZAp+wzzeBPUXr42fi8If" crossorigin="anonymous">
+    <!-- css and js -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='search.css') }}">
+    <script src="{{ url_for('static', filename='search.js') }}"></script>
+    <!-- <script>
+        setSearchEvent();
+    </script> -->
 
     {% block additional_styles %}
     {% endblock additional_styles %}
@@ -60,6 +66,26 @@
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav">
+                        <div class="nav-item nav-link search-parent">
+                            <div class="search">
+                                <!-- <form id="searchForm" method="POST" action="#" onsubmit="search()"> -->
+                                <input id="searchField" type="text" placeholder=" ">
+                                <!-- </form> -->
+                                <div>
+                                    <svg>
+                                        <use xlink:href="#path">
+                                    </svg>
+                                </div>
+                            </div>
+                            <svg style="display: none;">
+                                <symbol viewBox="0 0 160 28" id="path">
+                                    <path
+                                        d="M32.9418651,-20.6880772 C37.9418651,-20.6880772 40.9418651,-16.6880772 40.9418651,-12.6880772 C40.9418651,-8.68807717 37.9418651,-4.68807717 32.9418651,-4.68807717 C27.9418651,-4.68807717 24.9418651,-8.68807717 24.9418651,-12.6880772 C24.9418651,-16.6880772 27.9418651,-20.6880772 32.9418651,-20.6880772 L32.9418651,-29.870624 C32.9418651,-30.3676803 33.3448089,-30.770624 33.8418651,-30.770624 C34.08056,-30.770624 34.3094785,-30.6758029 34.4782612,-30.5070201 L141.371843,76.386562"
+                                        transform="translate(83.156854, 22.171573) rotate(-225.000000) translate(-83.156854, -22.171573)">
+                                    </path>
+                                </symbol>
+                            </svg>
+                        </div>
                         {% if current_user.is_authenticated %}
                         <a class="nav-item nav-link"
                             href="{{ url_for('users.profile', username=current_user.username) }}">
@@ -102,7 +128,7 @@
     {% block scripts %}
     {% endblock scripts %}
 
-    <!-- Optional JavaScript -->
+    <script>setSearchEvent();</script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

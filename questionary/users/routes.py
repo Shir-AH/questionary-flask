@@ -73,8 +73,7 @@ def account():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
-    image_file = url_for(
-        'static', filename=f'profile_pics/{current_user.image_file}')
+    image_file = current_user.image_file_url
     return render_template('account.html', title='חשבון', image_file=image_file, form=form)
 
 
@@ -82,8 +81,7 @@ def account():
 @login_required
 def profile(username):
     user = User.query.filter_by(username=username).first_or_404()
-    image_file = url_for(
-        'static', filename=f'profile_pics/{user.image_file}')
+    image_file = user.image_file_url
     return render_template('profile.html', user=user, image_file=image_file)
 
 

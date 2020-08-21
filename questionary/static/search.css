@@ -1,0 +1,83 @@
+:root {
+  --dark-bg-color: #1a1819;
+  --light-bg-color: #4b4b4c;
+  --dark-text-color: #B1B1B9;
+  --light-text-color: #EFE7E6;
+  --header-color: #B84244;
+}
+
+.search-parent {
+  all: initial;
+  align-self: center;
+  display: inline-block;
+}
+
+.search {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: inherit;
+}
+
+.search input {
+  background: none;
+  border: none;
+  outline: none;
+  width: 22px;
+  min-width: 0;
+  padding: 0;
+  z-index: 1;
+  position: relative;
+  line-height: 12px;
+  margin: 5px 0;
+  font-size: 12px;
+  -webkit-appearance: none;
+  font-family: 'Mukta Malar', Arial, Helvetica, sans-serif;
+  transition: all 0.6s ease;
+  cursor: pointer;
+  color: var(--light-text-color);
+}
+
+.search input+div {
+  position: relative;
+  height: 22px;
+  width: 100%;
+  margin: -22px 0 0 0;
+}
+
+.search input+div svg {
+  display: block;
+  position: absolute;
+  height: 22px;
+  width: 120px;
+  right: 0;
+  top: 0;
+  fill: none;
+  stroke: var(--light-text-color);
+  stroke-width: 1.5px;
+  stroke-dashoffset: 271.908;
+  stroke-dasharray: 59 212.908;
+  transition: all 0.6s ease;
+}
+
+.search input:not(:placeholder-shown), .search input:focus {
+  width: 120px;
+  padding: 0 4px;
+  cursor: text;
+}
+
+.search input:not(:placeholder-shown)+div svg, .search input:focus+div svg {
+  stroke-dasharray: 150 212.908;
+  stroke-dashoffset: 300;
+}
+
+.search:before, .search:after {
+  box-sizing: inherit;
+}
+
+.search ::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.search ::-moz-selection {
+  background: rgba(255, 255, 255, 0.2);
+}

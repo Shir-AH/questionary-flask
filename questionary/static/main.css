@@ -1,24 +1,37 @@
+:root {
+  --dark-bg-color: #1a1819;
+  --medium-bg-color: #3A3A40;
+  --light-bg-color: #4b4b4c;
+  --hover-bg-color: #49494B;
+  --dark-text-color: #B1B1B9;
+  --light-text-color: #EFE7E6;
+  --header-color: #B84244;
+  --link-color: #986162;
+  --link-hover-color: #A26D6E;
+  --lighter-bg-color: #565658;
+}
+
 body {
-  background: #fafafa;
-  color: #333333;
+  background: var(--medium-bg-color);
+  color: var(--light-text-color);
   margin-top: 5rem;
   margin-bottom: 5rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #444444;
+  color: var(--header-color);
 }
 
 .bg-steel {
-  background-color: #5f788a;
+  background-color: var(--dark-bg-color);
 }
 
 .site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+  color: var(--dark-text-color);
 }
 
 .site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
+  color: var(--light-text-color);
 }
 
 .site-header .navbar-nav .nav-link.active {
@@ -26,47 +39,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .content-section {
-  background: #ffffff;
+  background: var(--light-bg-color);
   padding: 10px 20px;
-  border: 1px solid #dddddd;
+  border: 1px solid var(--dark-text-color);
   border-radius: 3px;
   margin-bottom: 20px;
-}
-
-.article-title {
-  color: #444444;
-}
-
-a.article-title:hover {
-  color: #428bca;
-  text-decoration: none;
-}
-
-.article-content {
-  white-space: pre-line;
-}
-
-.article-img {
-  height: 65px;
-  width: 65px;
-  margin-right: 16px;
-}
-
-.article-metadata {
-  padding-bottom: 1px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3;
-}
-
-.article-metadata a:hover {
-  color: #333;
-  text-decoration: none;
-}
-
-.article-svg {
-  width: 20px;
-  height: 20px;
-  vertical-align: middle;
 }
 
 .account-img {
@@ -98,5 +75,39 @@ label {
 
 button a {
   text-decoration: none;
-  color: whitesmoke;
+  color: var(--light-text-color);
+}
+
+a:link {
+  color: var(--link-color);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--dark-text-color);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:active {
+  color: var(--header-color);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.list-group-item {
+  background-color: var(--lighter-bg-color);
+}
+
+.article-svg {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
 }

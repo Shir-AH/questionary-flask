@@ -53,3 +53,9 @@ def submit_questionary():
 def questionary():
     categories = Category.query.order_by(Category.id).all()
     return render_template('questionary_with_jinja.html', categories=categories, user=current_user)
+
+
+@main.route('/search/<string:search_str>', methods=['GET', 'POST'])
+def search(search_str):
+    search_results = User.query.filter(User.username.contains(search_str))
+    return render_template('search.html', users=search_results)

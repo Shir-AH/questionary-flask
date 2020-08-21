@@ -14,6 +14,7 @@ bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
+login_manager.login_message = 'העמוד הזה זמין רק למי שנרשם לאתר - בבקשה היכנסו לחשבון שלכם כדי לראות אותו.'
 mail = Mail()
 migrate = Migrate()
 admin = Admin()

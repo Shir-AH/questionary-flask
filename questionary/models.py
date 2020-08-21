@@ -2,18 +2,7 @@ from questionary import db, login_manager, admin, AppModelView
 from datetime import datetime as dt
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
-
-
-# user relationships helper table
-# user_relationships = db.Table('user_relationships',
-#                               db.Column('master_user_id', db.Integer, db.ForeignKey(
-#                                   'user.id'), primary_key=True),
-#                               db.Column('slave_user_id', db.Integer, db.ForeignKey(
-#                                   'user.id'), primary_key=True)
-#                               db.Column('relationship_description',
-#                                         db.String(120))
-#                               )
+from flask import current_app, url_for
 
 
 class RelationshipObject(db.Model):
@@ -88,6 +77,10 @@ class User(db.Model, UserMixin):
         question = Questions.query.filter_by(id=question_id).first()
         return Answer.query.filter_by(author=self, question=question) \
             .order_by(Answer.date_posted.desc()).first()
+
+    @property
+    def image_file_url(self):
+        return url_for('static', filename=f'profile_pics/{self.image_file}')
 
 
 class Category(db.Model):
