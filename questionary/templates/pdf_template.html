@@ -97,7 +97,7 @@
 <body>
     <main role="main" class="container">
         <div class="col">
-            <h2 id="sitelink"><a href="{{ link }}">קינקיברי</a></h2>
+            <h2 id="sitelink"><a href="{{ link }}"></a></h2>
             <h1>התשובות של {{ user.username }}</h1>
             <form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}"
                 onsubmit="selectCategories()">

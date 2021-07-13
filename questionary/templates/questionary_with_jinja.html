@@ -30,7 +30,7 @@
 {% if user.username %}
 <h1>התשובות של <a href="{{ url_for('users.profile', username=user.username) }}">{{ user.username }}</a></h1>
 {% else %}
-<h1>שאלון הגבולות והנטיות של קינקיברי</h1>
+<h1>שאלון</h1>
 {% endif %}
 <form id="form" method="POST" action="{{ url_for('main.submit_questionary') }}" onsubmit="selectCategories()">
     <div id="carousel" class="carousel slide" data-ride="false" data-interval="false">

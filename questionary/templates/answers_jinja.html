@@ -2,9 +2,9 @@
 
 {% block facebook_meta %}
 {% if current_user.is_authenticated %}
-<meta property="og:description" content="עניתי על שאלון הקינק של קינקיברי!" />
+<meta property="og:description" content="עניתי על שאלון ה של !" />
 {% else %}
-<meta property="og:description" content="שאלון הקינק של קינקיברי" />
+<meta property="og:description" content="שאלון ה של " />
 {% endif %}
 {% endblock facebook_meta %}
 
@@ -26,7 +26,7 @@
     function copyToClipboard() {
         // create a share message and copy it to the clipboard
         const content = document.createElement('textarea');
-        content.value = `עניתי על השאלון של קינקיברי!\n{{ page_url }}`;
+        content.value = `עניתי על השאלון של !\n{{ page_url }}`;
         content.value = content.value.replace('null\n\n', '');
         document.body.appendChild(content);
         content.select();
